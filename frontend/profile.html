@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>User Profile - SlideNode AI</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#004ac6",
+            "primary-container": "#2563eb",
+            "primary-fixed": "#dbe1ff",
+            "background": "#f8f9fa",
+            "on-surface": "#191c1d",
+            "on-surface-variant": "#434655",
+            "outline-variant": "#c3c6d7",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#f3f4f5",
+            "surface-container-highest": "#e1e3e4",
+            "success": "#10b981",
+            "success-container": "#d1fae5",
+            "on-success-container": "#065f46",
+            "error": "#ba1a1a"
+          },
+          fontFamily: {
+            sans: ["Inter", "sans-serif"],
+            display: ["Geist", "sans-serif"],
+            mono: ["JetBrains Mono", "monospace"]
+          },
+          spacing: {
+            "margin-mobile": "16px",
+            "container-max": "1280px",
+            "margin-desktop": "40px"
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; color: #191c1d; }
+    h1, h2, h3, h4, h5, h6, .font-display { font-family: 'Geist', sans-serif; }
+  </style>
+</head>
+<body class="bg-background min-h-screen flex flex-col font-sans text-on-surface">
+
+  <!-- Header / Top Bar (Navbar placeholder updated by global navbar helper) -->
+  <header class="bg-surface-bright/80 backdrop-blur-md border-b border-outline-variant shadow-sm sticky top-0 z-50 w-full">
+    <div class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop h-16 max-w-container-max mx-auto">
+      <div class="flex items-center gap-2">
+        <a href="index.html" class="flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary w-8 h-8"><path d="M2 10v3"></path><path d="M6 6v11"></path><path d="M10 3v18"></path><path d="M14 8v7"></path><path d="M18 5v13"></path><path d="M22 10v3"></path></svg>
+          <span class="font-display text-2xl font-bold text-primary">SlideNode</span>
+        </a>
+      </div>
+
+      <nav class="hidden md:flex gap-2 items-center">
+        <a class="px-4 py-2 text-on-surface-variant font-medium hover:bg-surface-container hover:text-on-surface rounded-full transition-colors duration-200" href="index.html">Home</a>
+        <a class="px-4 py-2 text-on-surface-variant font-medium hover:bg-surface-container hover:text-on-surface rounded-full transition-colors duration-200" href="dashboard.html">Dashboard</a>
+      </nav>
+
+      <!-- Global Navbar Right Control Group -->
+      <div class="flex items-center gap-3" id="global-navbar-controls">
+        <!-- Injected dynamically -->
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Profile Page Container -->
+  <main class="flex-1 w-full max-w-4xl mx-auto px-margin-mobile md:px-margin-desktop py-10 space-y-8">
+    
+    <div class="flex flex-col md:flex-row justify-between md:items-center gap-4">
+      <div>
+        <h1 class="font-display text-3xl font-bold text-on-surface">Account Profile</h1>
+        <p class="text-on-surface-variant text-sm mt-1">Manage your identity, personal avatar, and authentication security</p>
+      </div>
+    </div>
+
+    <!-- Main Profile Card Container -->
+    <div class="bg-surface-container-lowest border border-outline-variant rounded-2xl p-8 shadow-sm space-y-8">
+      
+      <!-- Top Avatar & Name Section -->
+      <div class="flex flex-col sm:flex-row items-center gap-6 pb-6 border-b border-outline-variant/60">
+        <div class="relative group">
+          <div class="w-24 h-24 rounded-full overflow-hidden border-2 border-primary/40 bg-surface-container-low shadow-md">
+            <img id="profile-avatar-img" src="https://ui-avatars.com/api/?name=User&background=004AC6&color=fff" class="w-full h-full object-cover" alt="Profile avatar">
+          </div>
+          <label for="avatar-file-input" class="absolute bottom-0 right-0 w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center cursor-pointer shadow-md hover:bg-primary-container transition-all">
+            <span class="material-symbols-outlined text-sm">photo_camera</span>
+          </label>
+          <input type="file" id="avatar-file-input" accept="image/png, image/jpeg, image/webp" class="hidden">
+        </div>
+
+        <div class="text-center sm:text-left space-y-1">
+          <h2 class="font-display font-bold text-xl text-on-surface" id="profile-display-name">Loading...</h2>
+          <p class="text-on-surface-variant text-sm" id="profile-display-email">loading@company.com</p>
+          <p class="text-xs text-outline font-mono mt-1" id="profile-member-since">Member since --</p>
+        </div>
+      </div>
+
+      <!-- Profile Details Form -->
+      <form id="form-edit-profile" class="space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-xs font-semibold text-on-surface-variant mb-1.5">Full Name</label>
+            <input type="text" id="edit-full-name" required class="w-full bg-surface-container-low border border-outline-variant rounded-xl p-3.5 text-on-surface text-sm placeholder:text-on-surface-variant/60 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-on-surface-variant mb-1.5">Email Address (Read only)</label>
+            <input type="email" id="edit-email" readonly class="w-full bg-surface-container border border-outline-variant/60 rounded-xl p-3.5 text-on-surface-variant text-sm outline-none cursor-not-allowed">
+          </div>
+        </div>
+
+        <div class="flex flex-wrap gap-3 pt-2">
+          <button type="submit" id="btn-save-profile" class="bg-primary hover:bg-primary-container text-white px-6 py-2.5 rounded-xl font-semibold text-sm shadow-sm transition-all flex items-center gap-2">
+            <span class="material-symbols-outlined text-base">save</span> Save Profile
+          </button>
+          <button type="button" id="btn-change-password" class="bg-surface-container-lowest hover:bg-surface-container text-on-surface px-5 py-2.5 rounded-xl font-medium text-sm border border-outline-variant transition-all flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-base">key</span> Change Password
+          </button>
+          <button type="button" id="btn-logout-profile" class="bg-error/10 hover:bg-error/20 text-error px-5 py-2.5 rounded-xl font-semibold text-sm transition-all flex items-center gap-1.5 border border-error/20">
+            <span class="material-symbols-outlined text-base">logout</span> Log Out
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </main>
+
+  <footer class="py-6 text-center text-xs text-on-surface-variant">
+    SlideNode AI • Voice to Presentation Engine
+  </footer>
+
+  <script type="module" src="./src/pages/profile.ts"></script>
+</body>
+</html>

@@ -1,0 +1,702 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Secure Payment - SlideNode</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&amp;family=Inter:wght@100..900&amp;family=JetBrains+Mono:wght@100..800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "on-surface-variant": "#434655",
+                "on-secondary-fixed": "#131b2e",
+                "error": "#ba1a1a",
+                "tertiary": "#3e3fcc",
+                "on-secondary": "#ffffff",
+                "on-error": "#ffffff",
+                "primary-container": "#2563eb",
+                "on-tertiary-container": "#f1eeff",
+                "outline": "#737686",
+                "tertiary-fixed": "#e1e0ff",
+                "surface": "#f8f9fa",
+                "on-secondary-fixed-variant": "#3f465c",
+                "surface-container-high": "#e7e8e9",
+                "on-tertiary-fixed": "#07006c",
+                "surface-variant": "#e1e3e4",
+                "secondary-fixed-dim": "#bec6e0",
+                "on-tertiary": "#ffffff",
+                "primary": "#004ac6",
+                "surface-container": "#edeeef",
+                "surface-container-low": "#f3f4f5",
+                "surface-container-highest": "#e1e3e4",
+                "surface-dim": "#d9dadb",
+                "background": "#f8f9fa",
+                "primary-fixed-dim": "#b4c5ff",
+                "on-secondary-container": "#5c647a",
+                "secondary": "#565e74",
+                "surface-bright": "#f8f9fa",
+                "on-tertiary-fixed-variant": "#2f2ebe",
+                "surface-container-lowest": "#ffffff",
+                "tertiary-container": "#585be6",
+                "outline-variant": "#c3c6d7",
+                "primary-fixed": "#dbe1ff",
+                "tertiary-fixed-dim": "#c0c1ff",
+                "inverse-primary": "#b4c5ff",
+                "inverse-on-surface": "#f0f1f2",
+                "on-primary-container": "#eeefff",
+                "on-error-container": "#93000a",
+                "error-container": "#ffdad6",
+                "on-primary-fixed": "#00174b",
+                "inverse-surface": "#2e3132",
+                "surface-tint": "#0053db",
+                "on-primary": "#ffffff",
+                "secondary-container": "#dae2fd",
+                "on-primary-fixed-variant": "#003ea8",
+                "on-surface": "#191c1d",
+                "on-background": "#191c1d",
+                "secondary-fixed": "#dae2fd"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+        },
+        "spacing": {
+                "base": "8px",
+                "stack-lg": "48px",
+                "stack-md": "24px",
+                "stack-sm": "12px",
+                "container-max": "1280px",
+                "margin-mobile": "16px",
+                "margin-desktop": "40px",
+                "gutter": "24px"
+        },
+        "fontFamily": {
+                "display": [
+                        "Geist"
+                ],
+                "mono": [
+                        "JetBrains Mono"
+                ],
+                "label-sm": [
+                        "Geist"
+                ],
+                "headline-md": [
+                        "Geist"
+                ],
+                "body-lg": [
+                        "Inter"
+                ],
+                "headline-lg-mobile": [
+                        "Geist"
+                ],
+                "headline-lg": [
+                        "Geist"
+                ],
+                "body-md": [
+                        "Inter"
+                ],
+                "label-md": [
+                        "Geist"
+                ]
+        },
+        "fontSize": {
+                "display": [
+                        "48px",
+                        {
+                                "lineHeight": "56px",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "mono": [
+                        "14px",
+                        {
+                                "lineHeight": "20px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "label-sm": [
+                        "12px",
+                        {
+                                "lineHeight": "16px",
+                                "fontWeight": "600"
+                        }
+                ],
+                "headline-md": [
+                        "24px",
+                        {
+                                "lineHeight": "32px",
+                                "fontWeight": "600"
+                        }
+                ],
+                "body-lg": [
+                        "18px",
+                        {
+                                "lineHeight": "28px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "headline-lg-mobile": [
+                        "24px",
+                        {
+                                "lineHeight": "32px",
+                                "fontWeight": "600"
+                        }
+                ],
+                "headline-lg": [
+                        "32px",
+                        {
+                                "lineHeight": "40px",
+                                "letterSpacing": "-0.01em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "body-md": [
+                        "16px",
+                        {
+                                "lineHeight": "24px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "label-md": [
+                        "14px",
+                        {
+                                "lineHeight": "20px",
+                                "letterSpacing": "0.01em",
+                                "fontWeight": "500"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+<style>
+        .fade-in { animation: fadeIn 0.5s ease-out forwards; opacity: 0; }
+        .delay-100 { animation-delay: 100ms; }
+        .delay-200 { animation-delay: 200ms; }
+        .delay-300 { animation-delay: 300ms; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .card-hover { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .card-hover:hover { transform: translateY(-2px); box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.08); }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col">
+<nav class="bg-surface/80 dark:bg-on-surface/80 backdrop-blur-md fixed top-0 w-full border-b border-outline-variant/30 shadow-sm transition-all duration-200 ease-in-out z-50">
+<div class="flex justify-between items-center px-margin-mobile md:px-margin-desktop h-16 w-full max-w-container-max mx-auto">
+<div class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim">
+                Voice to Slide Deck Node
+            </div>
+<div class="hidden md:flex items-center gap-6">
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors" href="index.html">Home</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors" href="dashboard.html">Dashboard</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors" href="receipt.html">Payments</a>
+</div>
+<div class="hidden md:flex items-center gap-4" id="global-navbar-controls">
+  <!-- Injected dynamically by navbar service -->
+</div>
+<button class="md:hidden text-on-surface-variant">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</nav>
+<!-- Main Content -->
+<main class="flex-grow pt-[104px] pb-stack-lg px-margin-mobile md:px-margin-desktop w-full max-w-container-max mx-auto">
+<!-- Header -->
+<div class="text-center mb-stack-lg fade-in">
+<h1 class="font-headline-lg-mobile md:font-display text-headline-lg-mobile md:text-display text-primary mb-stack-sm">Generate Your Presentation</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">
+    Your meeting audio is ready. Create a detailed AI-powered presentation from your meeting with zero subscriptions.
+</p>
+</div>
+<!-- Grid Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- LEFT SIDE (Content details) -->
+<div class="lg:col-span-7 space-y-stack-md">
+<!-- Meeting Summary Card -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant/30 p-stack-md shadow-sm card-hover fade-in delay-100">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-stack-sm flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">summarize</span>
+                        Meeting Summary
+                    </h2>
+<div class="space-y-4" id="meeting-summary-container">
+<div class="flex justify-between items-center py-2 border-b border-outline-variant/20">
+<span class="font-body-md text-body-md text-on-surface-variant">Meeting Name</span>
+<span class="font-label-md text-label-md text-on-surface" id="meta-meeting-name">Loading...</span>
+</div>
+<div class="flex justify-between items-center py-2 border-b border-outline-variant/20">
+<span class="font-body-md text-body-md text-on-surface-variant">File Name</span>
+<span class="font-mono text-mono text-on-surface" id="meta-file-name">Loading...</span>
+</div>
+<div class="flex justify-between items-center py-2 border-b border-outline-variant/20">
+<span class="font-body-md text-body-md text-on-surface-variant">File Size</span>
+<span class="font-label-md text-label-md text-on-surface" id="meta-file-size">Loading...</span>
+</div>
+<div class="flex justify-between items-center py-2 border-b border-outline-variant/20">
+<span class="font-body-md text-body-md text-on-surface-variant">Audio Duration</span>
+<span class="font-label-md text-label-md text-on-surface" id="meta-duration">Loading...</span>
+</div>
+<div class="flex justify-between items-center py-2 border-b border-outline-variant/20">
+<span class="font-body-md text-body-md text-on-surface-variant">Audio Format</span>
+<span class="font-mono text-mono text-on-surface" id="meta-format">Loading...</span>
+</div>
+<div class="flex justify-between items-center py-2">
+<span class="font-body-md text-body-md text-on-surface-variant">Estimated Slides</span>
+<span class="font-label-md text-label-md text-on-surface bg-primary-container/10 text-primary px-3 py-1 rounded-full" id="meta-slides">Loading...</span>
+</div>
+</div>
+</div>
+<!-- Transaction Information Card -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant/30 p-stack-md shadow-sm card-hover fade-in delay-200">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-stack-sm flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">info</span>
+                        Transaction Information
+                    </h3>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-1 uppercase tracking-wider">Merchant</p>
+<p class="font-body-md text-body-md text-on-surface">SlideNode AI</p>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-1 uppercase tracking-wider">Payment Protocol</p>
+<p class="font-body-md text-body-md text-on-surface">x402</p>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-1 uppercase tracking-wider">Settlement Layer</p>
+<p class="font-body-md text-body-md text-on-surface">Algorand Testnet</p>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-1 uppercase tracking-wider">Token</p>
+<p class="font-body-md text-body-md text-on-surface">USDC ASA</p>
+</div>
+<div class="sm:col-span-2">
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-1 uppercase tracking-wider">Estimated Confirmation Time</p>
+<p class="font-body-md text-body-md text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary text-sm">bolt</span>
+                                Less than 3 Seconds
+                            </p>
+</div>
+</div>
+</div>
+</div>
+<!-- RIGHT SIDE (Payment / Action) -->
+<div class="lg:col-span-5 space-y-stack-md">
+<!-- Payment Summary Card -->
+<div class="bg-surface-container-lowest rounded-xl border border-primary/20 p-stack-md shadow-sm card-hover relative overflow-hidden fade-in delay-100">
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-bl-full -z-10"></div>
+<h2 class="font-headline-md text-headline-md text-on-surface mb-stack-md">Payment Summary</h2>
+<div class="space-y-4 mb-stack-md">
+<div class="flex justify-between items-center">
+<span class="font-body-md text-body-md text-on-surface-variant">Audio Duration</span>
+<span class="font-label-md text-label-md text-on-surface" id="payment-duration">Loading...</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-body-md text-body-md text-on-surface-variant">Pricing Tier</span>
+<span class="font-label-md text-label-md text-on-surface bg-surface-variant px-3 py-1 rounded-full" id="payment-tier">Loading...</span>
+</div>
+<div class="h-px bg-outline-variant/30 my-4"></div>
+<div class="flex flex-col items-center justify-center py-4 text-center">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-2">Total Amount</span>
+<span class="text-5xl font-extrabold text-primary" id="payment-amount">-- USDC</span>
+<div class="mt-4 inline-flex items-center gap-1.5 font-label-sm text-[10px] bg-tertiary/10 text-tertiary px-3 py-1.5 rounded-full border border-tertiary/20 uppercase tracking-widest">
+    <span class="material-symbols-outlined text-[14px]">bolt</span> Pay Per Use • No Subscription
+</div>
+</div>
+</div>
+<div class="bg-surface p-4 rounded-lg border border-outline-variant/20 mb-stack-md flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">account_balance_wallet</span>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Network</p>
+<p class="font-label-md text-label-md text-on-surface">Algorand Testnet</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-label-sm text-label-sm text-on-surface-variant">Currency</p>
+<p class="font-label-md text-label-md text-on-surface">USDC</p>
+</div>
+</div>
+<button id="payBtn" type="button" class="w-full bg-primary hover:bg-primary/90 text-on-primary font-label-md text-sm py-4 rounded-xl shadow-sm transition-all flex items-center justify-center font-semibold cursor-pointer">
+    Pay &amp; Generate Presentation
+</button>
+<p class="text-center text-xs text-on-surface-variant font-medium mt-2">Pay-per-use • No subscription</p>
+</div>
+<!-- Payment Notice Card -->
+<div class="bg-surface-container-low rounded-xl p-4 border border-outline-variant/20 fade-in delay-300">
+<ul class="space-y-2">
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-sm mt-0.5">check_circle</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Secure blockchain payment</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-sm mt-0.5">check_circle</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Pay only once, No subscriptions</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-sm mt-0.5">check_circle</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Instant settlement</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-sm mt-0.5">check_circle</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Transaction receipt generated automatically</span>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<!-- Bottom Security Badges -->
+<div class="mt-stack-lg flex flex-wrap justify-center items-center gap-6 opacity-60 fade-in delay-300">
+<div class="flex items-center gap-2 font-label-sm text-label-sm text-on-surface-variant">
+<span class="material-symbols-outlined">shield</span> Secure Payment
+            </div>
+<div class="flex items-center gap-2 font-label-sm text-label-sm text-on-surface-variant">
+<span class="material-symbols-outlined">timer</span> Instant Settlement
+            </div>
+<div class="flex items-center gap-2 font-label-sm text-label-sm text-on-surface-variant">
+<span class="material-symbols-outlined">currency_exchange</span> Algorand
+            </div>
+<div class="flex items-center gap-2 font-label-sm text-label-sm text-on-surface-variant">
+<span class="material-symbols-outlined">verified</span> x402 Protocol
+            </div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-low dark:bg-on-surface border-t border-outline-variant/20 w-full mt-auto">
+<div class="flex flex-col md:flex-row justify-between items-center py-stack-lg px-margin-desktop w-full max-w-container-max mx-auto opacity-80 hover:opacity-100 transition-opacity">
+<div class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim mb-4 md:mb-0">
+                Voice to Slide Deck Node
+            </div>
+<div class="flex flex-wrap justify-center gap-6">
+<a class="font-label-sm text-label-sm text-on-surface-variant dark:text-outline-variant hover:text-on-surface dark:hover:text-surface-bright transition-colors" href="#">Privacy Policy</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant dark:text-outline-variant hover:text-on-surface dark:hover:text-surface-bright transition-colors" href="#">Terms of Service</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant dark:text-outline-variant hover:text-on-surface dark:hover:text-surface-bright transition-colors" href="#">API Status</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant dark:text-outline-variant hover:text-on-surface dark:hover:text-surface-bright transition-colors" href="#">Twitter</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant dark:text-outline-variant hover:text-on-surface dark:hover:text-surface-bright transition-colors" href="#">LinkedIn</a>
+</div>
+<div class="mt-4 md:mt-0 font-body-md text-body-md text-on-surface-variant text-sm">
+                © 2024 Voice to Slide Deck Node. Built on Blockchain. Powered by AI.
+            </div>
+</div>
+</footer>
+<script type="module">
+    import { api } from './src/services/api.ts';
+    import { x402 } from './src/services/x402.ts';
+    import { auth } from './src/services/auth.ts';
+    import { initNavbarControls } from './src/services/navbar.ts';
+    import { fetchOnChainBalances, invalidateBalanceCache, refreshWalletBalances, refreshBalanceAfterPayment } from './src/services/algorand.ts';
+    import { getLastSignedTxId } from './src/services/pera.ts';
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        const user = await auth.initAuthGuard(true);
+        if (!user) return;
+        await initNavbarControls();
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const meetingId = urlParams.get('meetingId');
+        console.log("[PAYMENT] meetingId:", meetingId);
+
+        if (!meetingId) {
+            console.error("[PAYMENT] Missing meetingId parameter in URL");
+            window.location.href = 'index.html';
+            return;
+        }
+
+        // Helpers
+        const formatFileSize = (bytes) => {
+            if (!bytes || isNaN(bytes) || bytes <= 0) return "1.5 MB";
+            if (bytes >= 1024 * 1024) return (bytes / (1024 * 1024)).toFixed(1) + " MB";
+            return Math.round(bytes / 1024) + " KB";
+        };
+
+        const formatDuration = (seconds) => {
+            const secs = Math.round(Number(seconds)) || 60;
+            const h = Math.floor(secs / 3600);
+            const m = Math.floor((secs % 3600) / 60);
+            const s = Math.floor(secs % 60);
+            if (h > 0) return `${h}h ${m}m${s > 0 ? ` ${s}s` : ''}`;
+            if (m > 0) return `${m}m ${s}s`;
+            return `${s}s`;
+        };
+
+        const renderUserNotice = (message, title = "Payment unsuccessful", showRetry = true, onRetry = null) => {
+            let noticeBox = document.getElementById('user-notice-box');
+            if (!noticeBox) {
+                noticeBox = document.createElement('div');
+                noticeBox.id = 'user-notice-box';
+                const payBtnEl = document.getElementById('payBtn');
+                if (payBtnEl && payBtnEl.parentElement) {
+                    payBtnEl.parentElement.insertBefore(noticeBox, payBtnEl);
+                }
+            }
+            
+            noticeBox.className = 'bg-red-50/90 text-red-900 p-4 rounded-xl mb-4 border border-red-200 text-xs font-medium flex items-center justify-between gap-3 fade-in';
+            noticeBox.innerHTML = `
+                <div>
+                    <p class="font-bold text-red-950 mb-0.5">${title}</p>
+                    <p class="text-red-800 text-[11px]">${message || "We couldn't verify your payment. Please try again."}</p>
+                </div>
+                ${showRetry ? `<button id="noticeRetryBtn" type="button" class="bg-red-900 hover:bg-red-950 text-white px-3.5 py-1.5 rounded-lg text-xs font-semibold shrink-0 cursor-pointer transition-all">Try Again</button>` : ''}
+            `;
+
+            const retryBtn = document.getElementById('noticeRetryBtn');
+            if (retryBtn) {
+                retryBtn.onclick = () => {
+                    noticeBox.remove();
+                    if (onRetry) onRetry();
+                    else payBtn.click();
+                };
+            }
+            noticeBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        };
+
+        const loadMeeting = async () => {
+            try {
+                const data = await api.getMeeting(meetingId);
+                if (!data || !data.success || !data.meeting) {
+                    throw new Error(data?.error || "Unable to fetch meeting record.");
+                }
+
+                const meeting = data.meeting;
+                console.log("[PAYMENT] meeting data:", meeting);
+                console.log("[PAYMENT] audio duration:", meeting.audio_duration_seconds, "seconds");
+                console.log("[PAYMENT] pricing tier:", (meeting.billable_minutes || 1) + " Minute Tier");
+                console.log("[PAYMENT] calculated amount:", (meeting.price_usdc || 0.50).toFixed(2) + " USDC");
+
+                // Auto-navigate if meeting is ALREADY paid or verified
+                if (meeting.status === 'completed') {
+                    console.log("[PAYMENT] Meeting already completed. Navigating to dashboard...");
+                    window.location.replace(`dashboard.html?meetingId=${meetingId}`);
+                    return meeting;
+                }
+                if (meeting.status === 'payment_verified' || meeting.status === 'processing') {
+                    console.log("[PAYMENT] Meeting already verified. Navigating to processing...");
+                    window.location.replace(`processing.html?meetingId=${meetingId}`);
+                    return meeting;
+                }
+
+                const ext = (meeting.audio_format || (meeting.file_name && meeting.file_name.includes('.') ? meeting.file_name.split('.').pop() : 'WAV')).toUpperCase();
+                const fileSizeStr = formatFileSize(meeting.file_size);
+                const durationStr = formatDuration(meeting.audio_duration_seconds);
+                const estSlidesCount = Math.max(4, Math.min(12, Math.ceil((meeting.audio_duration_seconds || 60) / 30)));
+                const priceVal = Number(meeting.price_usdc || 0.50).toFixed(2);
+
+                document.getElementById('meta-meeting-name').textContent = meeting.meeting_name || 'Meeting Recording';
+                document.getElementById('meta-file-name').textContent = meeting.file_name || 'audio_recording';
+                document.getElementById('meta-file-size').textContent = fileSizeStr;
+                document.getElementById('meta-duration').textContent = durationStr;
+                document.getElementById('meta-format').textContent = ext;
+                document.getElementById('meta-slides').textContent = `${estSlidesCount} Slides`;
+                
+                document.getElementById('payment-duration').textContent = durationStr;
+                document.getElementById('payment-tier').textContent = `${meeting.billable_minutes || 1} Min Tier`;
+                document.getElementById('payment-amount').textContent = `${priceVal} USDC`;
+
+                return meeting;
+            } catch (err) {
+                console.error("[PAYMENT] Failed to load meeting details:", err);
+                document.getElementById('meta-meeting-name').textContent = 'Unable to load';
+                document.getElementById('meta-file-name').textContent = 'Unable to load';
+                document.getElementById('meta-file-size').textContent = 'Unable to load';
+                document.getElementById('meta-duration').textContent = 'Unable to load';
+                document.getElementById('meta-format').textContent = 'Unable to load';
+                document.getElementById('meta-slides').textContent = 'Unable to load';
+                document.getElementById('payment-duration').textContent = 'Unable to load';
+                document.getElementById('payment-tier').textContent = 'Unable to load';
+                document.getElementById('payment-amount').textContent = '-- USDC';
+
+                renderUserNotice(err.message || "Unable to load meeting details.", "Meeting data unavailable", true, loadMeeting);
+                return null;
+            }
+        };
+
+        const currentMeeting = await loadMeeting();
+
+        // Pay Button & Pre-flight Balance Validation
+        const payBtn = document.getElementById('payBtn');
+        const spinnerSvg = `<svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>`;
+
+        const userWallet = await auth.getUserWallet(true);
+        const connectedWalletAddr = userWallet?.address || (x402.getWalletAddress ? x402.getWalletAddress() : "");
+        const requiredAmountUsdc = currentMeeting?.price_usdc || 0.40;
+
+        // Perform initial on-chain USDC balance check on page load
+        const initialOnChain = await fetchOnChainBalances(connectedWalletAddr, true);
+        console.log("[PAYMENT LOAD] Connected wallet:", connectedWalletAddr);
+        console.log("[PAYMENT LOAD] On-chain USDC balance:", initialOnChain.usdcVal, "USDC (required:", requiredAmountUsdc, "USDC)");
+
+        if (initialOnChain.usdcVal < requiredAmountUsdc) {
+            console.warn("[PAYMENT LOAD] Insufficient USDC balance on connected wallet. Disabling payment button.");
+            payBtn.disabled = true;
+            payBtn.className = "w-full bg-outline-variant text-on-surface-variant font-label-md text-sm py-4 rounded-xl shadow-none font-semibold cursor-not-allowed opacity-60";
+            payBtn.innerHTML = `Insufficient USDC Balance`;
+            renderUserNotice(
+                `Insufficient USDC balance. You need ${requiredAmountUsdc.toFixed(2)} USDC but your wallet (${connectedWalletAddr ? connectedWalletAddr.substring(0, 8) + '...' : ''}) has ${initialOnChain.usdcVal.toFixed(2)} USDC on Algorand Testnet.`,
+                "Insufficient USDC Balance",
+                false
+            );
+        } else {
+            payBtn.disabled = false;
+            payBtn.className = "w-full bg-primary hover:bg-primary/90 text-on-primary font-label-md text-sm py-4 rounded-xl shadow-sm transition-all flex items-center justify-center font-semibold cursor-pointer";
+            payBtn.innerHTML = `Pay &amp; Generate Presentation`;
+        }
+
+        // Register x402 Payment State Listener
+        if (x402 && typeof x402.setStatusCallback === 'function') {
+            x402.setStatusCallback((status) => {
+                console.log("[PAYMENT] x402 status transition:", status);
+                if (status === 'waiting_wallet') {
+                    payBtn.innerHTML = `${spinnerSvg} Waiting for Pera Wallet approval...`;
+                    payBtn.disabled = true;
+                } else if (status === 'confirming_payment') {
+                    payBtn.innerHTML = `${spinnerSvg} Confirming payment...`;
+                    payBtn.disabled = true;
+                } else if (status === 'verifying_payment') {
+                    payBtn.innerHTML = `${spinnerSvg} Verifying payment on Algorand Testnet...`;
+                    payBtn.disabled = true;
+                } else if (status === 'verified') {
+                    payBtn.innerHTML = `✓ Payment Settled on Algorand!`;
+                    payBtn.disabled = true;
+                    invalidateBalanceCache(connectedWalletAddr);
+                } else if (status === 'failed') {
+                    console.warn("[PAYMENT] x402 payment step failed");
+                    payBtn.innerHTML = `Pay &amp; Generate Presentation`;
+                    payBtn.disabled = false;
+                }
+            });
+        }
+
+        payBtn.addEventListener('click', async function() {
+            const btn = this;
+
+            // Clear previous notice box if present
+            const oldNotice = document.getElementById('user-notice-box');
+            if (oldNotice) oldNotice.remove();
+
+            console.log("[PAYMENT] Pre-submit balance check for meeting:", meetingId);
+            btn.innerHTML = `${spinnerSvg} Checking USDC balance on Algorand...`;
+            btn.disabled = true;
+
+            const liveBalance = await fetchOnChainBalances(connectedWalletAddr, true);
+            console.log("[PAYMENT PRE-SUBMIT] Live USDC balance:", liveBalance.usdcVal, "USDC (required:", requiredAmountUsdc, "USDC)");
+
+            // STOP FLOW IMMEDIATELY IF BALANCE IS INSUFFICIENT
+            if (liveBalance.usdcVal < requiredAmountUsdc) {
+                console.error("[PAYMENT ERROR] Insufficient USDC balance! Required:", requiredAmountUsdc, "USDC, Available:", liveBalance.usdcVal, "USDC");
+                renderUserNotice(
+                    `Insufficient USDC balance. You need ${requiredAmountUsdc.toFixed(2)} USDC but your wallet (${connectedWalletAddr ? connectedWalletAddr.substring(0, 8) + '...' : ''}) has ${liveBalance.usdcVal.toFixed(2)} USDC on Algorand Testnet.`,
+                    "Insufficient USDC Balance",
+                    false
+                );
+                btn.className = "w-full bg-outline-variant text-on-surface-variant font-label-md text-sm py-4 rounded-xl shadow-none font-semibold cursor-not-allowed opacity-60";
+                btn.innerHTML = `Insufficient USDC Balance`;
+                btn.disabled = true;
+                return;
+            }
+
+            try {
+                console.log("Verification started");
+                btn.innerHTML = `${spinnerSvg} Waiting for Pera Wallet approval...`;
+                const verifyUrl = api.getVerifyPaymentUrl(meetingId);
+                console.log("[PAYMENT] Sending verification request to:", verifyUrl);
+
+                const response = await x402.fetch(verifyUrl, {
+                    method: 'POST'
+                });
+
+                let result;
+                try {
+                    result = await response.json();
+                } catch (jsonErr) {
+                    result = { success: false, error: 'Server returned a non-JSON response' };
+                }
+
+                console.log("[PAYMENT] Verification response:", response.status, result);
+
+                const capturedTxId = getLastSignedTxId() || result.transactionId || result.txId || result.receipt || '';
+                if (capturedTxId) {
+                    console.log("Transaction ID:", capturedTxId);
+                }
+
+                if (response.ok && result.success && (result.verified || result.paymentVerified)) {
+                    console.log("Verification successful");
+                    console.log("Redirecting to receipt");
+                    btn.innerHTML = `✓ Payment Verified on Algorand! Opening receipt...`;
+                    btn.disabled = true;
+
+                    // Immediately refresh live blockchain balances
+                    await refreshWalletBalances(connectedWalletAddr).catch(() => {});
+                    refreshBalanceAfterPayment(connectedWalletAddr, initialOnChain.usdcVal).catch(() => {});
+
+                    setTimeout(() => {
+                        window.location.replace(`receipt.html?meetingId=${meetingId}`);
+                    }, 400);
+                    return;
+                }
+
+                // Fallback: If x402 request completed but didn't return verified, try direct on-chain txId verification
+                if (capturedTxId && capturedTxId.length >= 30) {
+                    console.log("[PAYMENT] Executing direct transaction verification fallback for txId:", capturedTxId);
+                    const directRes = await fetch(verifyUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            txId: capturedTxId,
+                            payerAddress: connectedWalletAddr
+                        })
+                    });
+
+                    const directResult = await directRes.json().catch(() => ({}));
+                    if (directRes.ok && directResult.success && directResult.verified) {
+                        console.log("Verification successful");
+                        console.log("Redirecting to receipt");
+                        btn.innerHTML = `✓ Payment Verified on Algorand! Opening receipt...`;
+                        btn.disabled = true;
+
+                        // Immediately refresh live blockchain balances
+                        await refreshWalletBalances(connectedWalletAddr).catch(() => {});
+                        refreshBalanceAfterPayment(connectedWalletAddr, initialOnChain.usdcVal).catch(() => {});
+
+                        setTimeout(() => {
+                            window.location.replace(`receipt.html?meetingId=${meetingId}`);
+                        }, 400);
+                        return;
+                    } else {
+                        throw new Error(directResult.error || "On-chain verification failed for transaction " + capturedTxId);
+                    }
+                }
+
+                throw new Error(result.error || `Payment verification failed (HTTP ${response.status}).`);
+
+            } catch (e) {
+                console.error("Verification failed:", e);
+
+                let userMsg = "We couldn't verify your payment. Please try again.";
+                if (e && (e.error || e.message)) {
+                    const rawMsg = String(e.error || e.message);
+                    if (rawMsg.includes("must optin") || rawMsg.includes("missing from") || rawMsg.includes("receiver error") || rawMsg.includes("optin")) {
+                        userMsg = "Recipient Opt-In Required: The platform receiver wallet (4PUFDLRK...JIU4) must execute an ASA Opt-In transaction for USDC ASA 10458941 on Algorand Testnet before payments can land on-chain.";
+                    } else if (rawMsg.includes("cancelled") || rawMsg.includes("rejected")) {
+                        userMsg = "Transaction was cancelled or rejected in Pera Wallet.";
+                    } else if (rawMsg.includes("balance") || rawMsg.includes("insufficient") || rawMsg.includes("Insufficient")) {
+                        userMsg = "Insufficient USDC balance on connected wallet.";
+                    } else {
+                        userMsg = rawMsg;
+                    }
+                }
+
+                renderUserNotice(userMsg, "Payment Verification Failed", true);
+                btn.innerHTML = `Pay &amp; Generate Presentation`;
+                btn.disabled = false;
+            }
+        });
+    });
+</script>
+</body></html>

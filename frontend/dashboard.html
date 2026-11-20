@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Dashboard - SlideNode AI</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-container-highest": "#e1e3e4",
+            "error-container": "#ffdad6",
+            "secondary-fixed": "#dae2fd",
+            "on-background": "#191c1d",
+            "tertiary-fixed": "#e1e0ff",
+            "tertiary-container": "#585be6",
+            "surface-tint": "#0053db",
+            "surface-container": "#edeeef",
+            "outline": "#737686",
+            "on-secondary": "#ffffff",
+            "on-tertiary-fixed-variant": "#2f2ebe",
+            "primary": "#004ac6",
+            "on-surface-variant": "#434655",
+            "secondary": "#565e74",
+            "tertiary-fixed-dim": "#c0c1ff",
+            "primary-container": "#2563eb",
+            "inverse-primary": "#b4c5ff",
+            "on-error": "#ffffff",
+            "on-secondary-fixed-variant": "#3f465c",
+            "surface-dim": "#d9dadb",
+            "surface-bright": "#f8f9fa",
+            "outline-variant": "#c3c6d7",
+            "on-error-container": "#93000a",
+            "on-primary-container": "#eeefff",
+            "on-primary-fixed-variant": "#003ea8",
+            "secondary-container": "#dae2fd",
+            "on-primary": "#ffffff",
+            "on-surface": "#191c1d",
+            "primary-fixed": "#dbe1ff",
+            "background": "#f8f9fa",
+            "on-primary-fixed": "#00174b",
+            "surface-container-low": "#f3f4f5",
+            "on-tertiary-fixed": "#07006c",
+            "surface-variant": "#e1e3e4",
+            "secondary-fixed-dim": "#bec6e0",
+            "tertiary": "#3e3fcc",
+            "inverse-surface": "#2e3132",
+            "on-tertiary": "#ffffff",
+            "primary-fixed-dim": "#b4c5ff",
+            "surface-container-lowest": "#ffffff",
+            "on-secondary-container": "#5c647a",
+            "inverse-on-surface": "#f0f1f2",
+            "on-secondary-fixed": "#131b2e",
+            "surface": "#f8f9fa",
+            "error": "#ba1a1a",
+            "on-tertiary-container": "#f1eeff",
+            "surface-container-high": "#e7e8e9",
+            "success": "#10b981",
+            "success-container": "#d1fae5",
+            "on-success-container": "#065f46"
+          },
+          fontFamily: {
+            sans: ["Inter", "sans-serif"],
+            display: ["Geist", "sans-serif"],
+            mono: ["JetBrains Mono", "monospace"]
+          },
+          spacing: {
+            "margin-mobile": "16px",
+            "container-max": "1280px",
+            "margin-desktop": "40px"
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; color: #191c1d; }
+    h1, h2, h3, h4, h5, h6, .font-display { font-family: 'Geist', sans-serif; }
+    .active-tab {
+      background-color: #dbe1ff;
+      color: #004ac6;
+      font-weight: 600;
+      border-color: #004ac6;
+    }
+    .chip-hover { transition: all 0.2s ease; }
+    .chip-hover:hover { transform: translateY(-1px); border-color: #004ac6; background-color: #dbe1ff; }
+  </style>
+</head>
+<body class="bg-background min-h-screen flex flex-col font-sans text-on-surface">
+
+  <!-- Top NavBar (matches index.html exactly) -->
+  <header class="bg-surface-bright/80 backdrop-blur-md border-b border-outline-variant shadow-sm sticky top-0 z-50 w-full transition-all duration-300">
+    <div class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop h-16 max-w-container-max mx-auto">
+      <div class="flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary w-8 h-8"><path d="M2 10v3"></path><path d="M6 6v11"></path><path d="M10 3v18"></path><path d="M14 8v7"></path><path d="M18 5v13"></path><path d="M22 10v3"></path></svg>
+        <span class="font-display text-2xl font-bold text-primary">SlideNode</span>
+      </div>
+
+      <nav class="hidden md:flex gap-2 items-center">
+        <a class="px-4 py-2 text-on-surface-variant font-medium hover:bg-surface-container hover:text-on-surface rounded-full transition-colors duration-200 relative group" href="index.html">
+          Home
+          <span class="absolute bottom-1 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-1/2 opacity-0 group-hover:opacity-100"></span>
+        </a>
+        <a class="px-4 py-2 text-primary font-medium bg-primary-fixed rounded-full transition-colors duration-200" href="dashboard.html">
+          Dashboard
+        </a>
+      </nav>
+
+        <div class="flex items-center gap-3" id="global-navbar-controls">
+          <!-- Injected dynamically by navbar service -->
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Dashboard Content -->
+  <main class="flex-1 w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-8 space-y-8">
+
+    <!-- Dashboard Header Card -->
+    <div class="bg-surface-container-lowest border border-outline-variant rounded-2xl p-6 shadow-sm">
+      <div class="flex flex-col md:flex-row justify-between md:items-center gap-4">
+        <div>
+          <h1 class="font-display text-2xl font-bold text-on-surface" id="sidebar-meeting-name">Presentation Dashboard</h1>
+          <p class="text-on-surface-variant text-sm mt-1">AI-generated presentation workspace</p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2 text-xs font-mono">
+          <!-- 1. Slides Count Badge -->
+          <span class="bg-surface-container-low border border-outline-variant px-3 py-1.5 rounded-lg text-on-surface font-mono text-xs" id="total-slides-count">
+            10 Slides
+          </span>
+
+          <!-- 1b. Detected Language Badge -->
+          <span class="bg-primary-fixed border border-primary/30 px-3 py-1.5 rounded-lg text-primary font-mono text-xs flex items-center gap-1.5" id="detected-language-badge">
+            <span class="material-symbols-outlined text-sm">translate</span> Language: English
+          </span>
+
+          <!-- 2. Compact Theme Dropdown (Popover Menu) -->
+          <div class="relative inline-block" id="theme-menu-container">
+            <button id="theme-popover-btn" type="button" class="bg-surface-container-low hover:bg-surface-container text-on-surface px-3 py-1.5 rounded-lg text-xs font-mono font-medium flex items-center gap-1.5 border border-outline-variant transition-all">
+              <span id="current-theme-badge">Theme: Executive Blue</span>
+              <span class="material-symbols-outlined text-xs text-on-surface-variant">expand_more</span>
+            </button>
+            <div id="theme-popover-menu" class="hidden absolute left-0 md:right-0 md:left-auto mt-1.5 w-52 bg-surface-container-lowest border border-outline-variant rounded-xl shadow-xl z-50 overflow-hidden py-1 text-xs font-sans">
+              <button type="button" data-theme="executive_blue" class="theme-option-btn w-full px-3.5 py-2 text-left hover:bg-surface-container text-on-surface flex items-center justify-between">
+                <span>Executive Blue</span>
+              </button>
+              <button type="button" data-theme="modern_indigo" class="theme-option-btn w-full px-3.5 py-2 text-left hover:bg-surface-container text-on-surface flex items-center justify-between">
+                <span>Modern Indigo</span>
+              </button>
+              <button type="button" data-theme="emerald_professional" class="theme-option-btn w-full px-3.5 py-2 text-left hover:bg-surface-container text-on-surface flex items-center justify-between">
+                <span>Emerald Professional</span>
+              </button>
+              <button type="button" data-theme="midnight_executive" class="theme-option-btn w-full px-3.5 py-2 text-left hover:bg-surface-container text-on-surface flex items-center justify-between">
+                <span>Midnight Executive</span>
+              </button>
+              <button type="button" data-theme="warm_minimal" class="theme-option-btn w-full px-3.5 py-2 text-left hover:bg-surface-container text-on-surface flex items-center justify-between">
+                <span>Warm Minimal</span>
+              </button>
+              <button type="button" data-theme="tech_gradient" class="theme-option-btn w-full px-3.5 py-2 text-left hover:bg-surface-container text-on-surface flex items-center justify-between">
+                <span>Tech Gradient</span>
+              </button>
+              <button type="button" data-theme="minimal_monochrome" class="theme-option-btn w-full px-3.5 py-2 text-left hover:bg-surface-container text-on-surface flex items-center justify-between">
+                <span>Minimal Monochrome</span>
+              </button>
+              <button type="button" data-theme="consulting" class="theme-option-btn w-full px-3.5 py-2 text-left hover:bg-surface-container text-on-surface flex items-center justify-between">
+                <span>McKinsey Consulting</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 3. Version Badge -->
+          <span class="bg-surface-container-low border border-outline-variant px-3 py-1.5 rounded-lg text-on-surface font-mono text-xs flex items-center gap-1.5" id="sidebar-version-badge">
+            <span class="w-1.5 h-1.5 rounded-full bg-success"></span> Version 1 (Active)
+          </span>
+
+          <!-- 4. Single Download Button (Lucide / Material Download Icon + Dropdown) -->
+          <div class="relative inline-block" id="download-menu-container">
+            <button id="download-dropdown-btn" type="button" class="bg-surface-container-low hover:bg-surface-container text-on-surface px-3 py-1.5 rounded-lg text-xs font-mono font-medium flex items-center gap-1.5 border border-outline-variant transition-all">
+              <span class="material-symbols-outlined text-sm text-primary">download</span>
+              <span>Download</span>
+              <span class="material-symbols-outlined text-xs text-on-surface-variant">expand_more</span>
+            </button>
+            <div id="download-popover-menu" class="hidden absolute right-0 mt-1.5 w-56 bg-surface-container-lowest border border-outline-variant rounded-xl shadow-xl z-50 overflow-hidden py-1 text-xs font-sans">
+              <a id="btn-download-pptx" href="#" target="_blank" class="w-full px-3.5 py-2.5 text-left font-medium text-on-surface hover:bg-surface-container flex items-center gap-2 transition-all">
+                <span class="material-symbols-outlined text-base text-primary">slideshow</span> Download Presentation (.pptx)
+              </a>
+              <a id="btn-download-pdf" href="#" target="_blank" class="w-full px-3.5 py-2.5 text-left font-medium text-on-surface hover:bg-surface-container flex items-center gap-2 transition-all">
+                <span class="material-symbols-outlined text-base text-red-500">picture_as_pdf</span> Download PDF (.pdf)
+              </a>
+            </div>
+          </div>
+
+          <!-- 5. Regenerate Button -->
+          <button id="btn-regenerate-deck" type="button" class="bg-surface-container-low hover:bg-surface-container text-on-surface px-3 py-1.5 rounded-lg text-xs font-mono font-medium border border-outline-variant flex items-center gap-1.5 transition-all">
+            <span class="material-symbols-outlined text-sm text-primary">sync</span> Regenerate
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab Navigation (Horizontal Pill Tabs) -->
+    <div class="flex flex-wrap gap-2 border-b border-outline-variant pb-4">
+      <button data-tab="tab-slides" class="nav-tab px-4 py-2 rounded-full font-medium text-sm flex items-center gap-2 border border-outline-variant text-on-surface-variant hover:bg-primary-fixed hover:text-primary transition-all active-tab">
+        <span class="material-symbols-outlined text-base">view_carousel</span> Slides
+      </button>
+      <button data-tab="tab-modify" class="nav-tab px-4 py-2 rounded-full font-medium text-sm flex items-center gap-2 border border-outline-variant text-on-surface-variant hover:bg-primary-fixed hover:text-primary transition-all">
+        <span class="material-symbols-outlined text-base">auto_fix_high</span> Modify
+      </button>
+      <button data-tab="tab-versions" class="nav-tab px-4 py-2 rounded-full font-medium text-sm flex items-center gap-2 border border-outline-variant text-on-surface-variant hover:bg-primary-fixed hover:text-primary transition-all">
+        <span class="material-symbols-outlined text-base">history</span> Versions
+      </button>
+      <button data-tab="tab-summary" class="nav-tab px-4 py-2 rounded-full font-medium text-sm flex items-center gap-2 border border-outline-variant text-on-surface-variant hover:bg-primary-fixed hover:text-primary transition-all">
+        <span class="material-symbols-outlined text-base">description</span> Summary
+      </button>
+      <button data-tab="tab-actions" class="nav-tab px-4 py-2 rounded-full font-medium text-sm flex items-center gap-2 border border-outline-variant text-on-surface-variant hover:bg-primary-fixed hover:text-primary transition-all">
+        <span class="material-symbols-outlined text-base">task_alt</span> Actions & Speakers
+      </button>
+      <button data-tab="tab-transcript" class="nav-tab px-4 py-2 rounded-full font-medium text-sm flex items-center gap-2 border border-outline-variant text-on-surface-variant hover:bg-primary-fixed hover:text-primary transition-all">
+        <span class="material-symbols-outlined text-base">subtitles</span> Transcript
+      </button>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- TAB 1: SLIDE PREVIEW GALLERY -->
+    <!-- ================================================================= -->
+    <section id="tab-slides" class="tab-pane space-y-6">
+      <div class="flex flex-col md:flex-row justify-between md:items-center gap-4">
+        <div>
+          <h2 class="font-display text-xl font-bold text-on-surface">Slide Deck Preview</h2>
+          <p class="text-on-surface-variant text-sm">Click any slide thumbnail to open the full-screen viewer.</p>
+        </div>
+      </div>
+
+      <!-- Grid of Slide Previews -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="preview-thumbnails-grid">
+        <!-- Slide Preview Items rendered dynamically -->
+      </div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- TAB 2: MODIFY PRESENTATION -->
+    <!-- ================================================================= -->
+    <section id="tab-modify" class="tab-pane space-y-6 hidden">
+      <div>
+        <h2 class="font-display text-xl font-bold text-on-surface">Modify Presentation</h2>
+        <p class="text-on-surface-variant text-sm">Describe changes. AI will update slides, rebuild PPTX, and refresh previews.</p>
+      </div>
+
+      <div class="bg-surface-container-lowest border border-outline-variant rounded-2xl p-6 space-y-4 shadow-sm">
+        <label class="block text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Quick Preset Instructions</label>
+        <div class="flex flex-wrap gap-2.5">
+          <button class="prompt-chip chip-hover bg-surface-container-low border border-outline-variant/80 px-3.5 py-2 rounded-xl text-xs font-medium text-on-surface flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-primary text-sm">trending_up</span> "Add market analysis slide"
+          </button>
+          <button class="prompt-chip chip-hover bg-surface-container-low border border-outline-variant/80 px-3.5 py-2 rounded-xl text-xs font-medium text-on-surface flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-primary text-sm">account_tree</span> "Add architecture diagram slide"
+          </button>
+          <button class="prompt-chip chip-hover bg-surface-container-low border border-outline-variant/80 px-3.5 py-2 rounded-xl text-xs font-medium text-on-surface flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-primary text-sm">finance</span> "Make tone investor friendly"
+          </button>
+          <button class="prompt-chip chip-hover bg-surface-container-low border border-outline-variant/80 px-3.5 py-2 rounded-xl text-xs font-medium text-on-surface flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-primary text-sm">flag</span> "Add conclusion slide"
+          </button>
+          <button class="prompt-chip chip-hover bg-surface-container-low border border-outline-variant/80 px-3.5 py-2 rounded-xl text-xs font-medium text-on-surface flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-primary text-sm">rocket_launch</span> "Convert to startup pitch deck"
+          </button>
+          <button class="prompt-chip chip-hover bg-surface-container-low border border-outline-variant/80 px-3.5 py-2 rounded-xl text-xs font-medium text-on-surface flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-primary text-sm">grid_view</span> "Add SWOT analysis"
+          </button>
+          <button class="prompt-chip chip-hover bg-surface-container-low border border-outline-variant/80 px-3.5 py-2 rounded-xl text-xs font-medium text-on-surface flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-primary text-sm">compress</span> "Reduce text on slide 4"
+          </button>
+          <button class="prompt-chip chip-hover bg-surface-container-low border border-outline-variant/80 px-3.5 py-2 rounded-xl text-xs font-medium text-on-surface flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-primary text-sm">translate</span> "Replace technical language with business language"
+          </button>
+        </div>
+
+        <!-- Prompt Form -->
+        <form id="form-modify-presentation" class="space-y-4 pt-2">
+          <div>
+            <textarea id="prompt-input" rows="3" class="w-full bg-surface-container-low border border-outline-variant rounded-xl p-4 text-on-surface placeholder:text-on-surface-variant/60 text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none" placeholder="Describe changes to presentation..."></textarea>
+          </div>
+          <div class="flex justify-end">
+            <button type="submit" id="btn-submit-modify" class="bg-primary hover:bg-primary-container text-on-primary px-6 py-2.5 rounded-xl font-medium text-sm flex items-center gap-2 shadow-sm transition-all">
+              <span class="material-symbols-outlined text-base">auto_fix_high</span> Apply AI Changes
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- TAB 3: VERSION HISTORY -->
+    <!-- ================================================================= -->
+    <section id="tab-versions" class="tab-pane space-y-6 hidden">
+      <div>
+        <h2 class="font-display text-xl font-bold text-on-surface">Version History</h2>
+        <p class="text-on-surface-variant text-sm">Every edit creates a new version. Restore any previous version at any time.</p>
+      </div>
+      <div class="space-y-4" id="versions-list-container">
+        <!-- Versions dynamically rendered -->
+      </div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- TAB 4: EXECUTIVE SUMMARY -->
+    <!-- ================================================================= -->
+    <section id="tab-summary" class="tab-pane space-y-6 hidden">
+      <div>
+        <h2 class="font-display text-xl font-bold text-on-surface">Executive Summary</h2>
+        <p class="text-on-surface-variant text-sm">AI-generated summary of meeting discussions and strategic outcomes.</p>
+      </div>
+      <div class="bg-surface-container-lowest border border-outline-variant rounded-2xl p-6 text-on-surface leading-relaxed whitespace-pre-wrap text-base shadow-sm" id="summary-content-text">
+        Loading executive summary...
+      </div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- TAB 5: ACTION ITEMS & SPEAKERS -->
+    <!-- ================================================================= -->
+    <section id="tab-actions" class="tab-pane space-y-6 hidden">
+      <div>
+        <h2 class="font-display text-xl font-bold text-on-surface">Action Items & Speaker Breakdown</h2>
+        <p class="text-on-surface-variant text-sm">Tasks assigned during the meeting along with speaker speaking time.</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Action Items Column -->
+        <div class="bg-surface-container-lowest border border-outline-variant rounded-2xl p-6 space-y-4 shadow-sm">
+          <h3 class="font-display font-semibold text-lg text-on-surface flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary">task_alt</span> Extracted Action Items
+          </h3>
+          <div class="space-y-3" id="action-items-list">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+        <!-- Speakers Column -->
+        <div class="bg-surface-container-lowest border border-outline-variant rounded-2xl p-6 space-y-4 shadow-sm">
+          <h3 class="font-display font-semibold text-lg text-on-surface flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary">record_voice_over</span> Identified Speakers
+          </h3>
+          <div class="space-y-3" id="speakers-list">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- TAB 6: TRANSCRIPT -->
+    <!-- ================================================================= -->
+    <section id="tab-transcript" class="tab-pane space-y-6 hidden">
+      <div>
+        <h2 class="font-display text-xl font-bold text-on-surface">Meeting Transcript</h2>
+        <p class="text-on-surface-variant text-sm">Full speech-to-text transcript derived from audio.</p>
+      </div>
+      <div class="bg-surface-container-lowest border border-outline-variant rounded-2xl p-6 text-on-surface-variant font-mono text-sm leading-relaxed whitespace-pre-wrap max-h-[600px] overflow-y-auto shadow-sm" id="transcript-full-text">
+        Loading transcript...
+      </div>
+      
+      <!-- Transcript Action Buttons -->
+      <div class="flex justify-end pt-2">
+        <a id="btn-download-docx" href="#" class="bg-primary hover:bg-primary/90 text-on-primary font-medium text-xs py-3 px-5 rounded-xl border border-primary/20 shadow-sm transition-all flex items-center gap-2 cursor-pointer">
+          <span class="material-symbols-outlined text-base">description</span>
+          <span>Download Transcript (.docx)</span>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================================================================= -->
+  <!-- FULL SCREEN SLIDE PREVIEW MODAL -->
+  <!-- ================================================================= -->
+  <div id="slide-modal" class="fixed inset-0 bg-on-surface/60 backdrop-blur-md z-50 flex items-center justify-center p-6 hidden">
+    <div class="bg-surface-container-lowest border border-outline-variant rounded-2xl max-w-5xl w-full flex flex-col overflow-hidden shadow-2xl">
+      <!-- Modal Header -->
+      <div class="px-6 py-4 border-b border-outline-variant flex justify-between items-center">
+        <div class="flex items-center gap-3">
+          <span class="bg-primary text-on-primary font-bold text-xs px-2.5 py-1 rounded-full" id="modal-slide-num">Slide 1</span>
+          <h3 class="font-display font-bold text-on-surface text-lg" id="modal-slide-title">Slide Title</h3>
+        </div>
+        <button id="btn-close-modal" class="text-on-surface-variant hover:text-on-surface p-1 rounded-lg">
+          <span class="material-symbols-outlined text-xl">close</span>
+        </button>
+      </div>
+      <!-- Modal Body -->
+      <div class="p-8 flex justify-center items-center bg-surface-container-low min-h-[480px]" id="modal-slide-body">
+        <!-- Rendered SVG preview inserted here -->
+      </div>
+      <!-- Modal Footer -->
+      <div class="px-6 py-4 border-t border-outline-variant flex justify-between items-center">
+        <button id="btn-prev-slide" class="bg-surface-container-lowest hover:bg-surface-container text-on-surface px-4 py-2 rounded-xl text-sm font-medium flex items-center gap-1 border border-outline-variant transition-all">
+          <span class="material-symbols-outlined text-base">chevron_left</span> Previous Slide
+        </button>
+        <span class="text-xs text-on-surface-variant font-mono" id="modal-slide-indicator">1 of 10</span>
+        <button id="btn-next-slide" class="bg-surface-container-lowest hover:bg-surface-container text-on-surface px-4 py-2 rounded-xl text-sm font-medium flex items-center gap-1 border border-outline-variant transition-all">
+          Next Slide <span class="material-symbols-outlined text-base">chevron_right</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="./src/pages/dashboard.ts"></script>
+</body>
+</html>

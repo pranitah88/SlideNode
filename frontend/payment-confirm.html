@@ -1,0 +1,399 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Secure Payment - SlideNode</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&amp;family=Inter:wght@100..900&amp;family=JetBrains+Mono:wght@100..800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "on-surface-variant": "#434655",
+                "on-secondary-fixed": "#131b2e",
+                "error": "#ba1a1a",
+                "tertiary": "#3e3fcc",
+                "on-secondary": "#ffffff",
+                "on-error": "#ffffff",
+                "primary-container": "#2563eb",
+                "on-tertiary-container": "#f1eeff",
+                "outline": "#737686",
+                "tertiary-fixed": "#e1e0ff",
+                "surface": "#f8f9fa",
+                "on-secondary-fixed-variant": "#3f465c",
+                "surface-container-high": "#e7e8e9",
+                "on-tertiary-fixed": "#07006c",
+                "surface-variant": "#e1e3e4",
+                "secondary-fixed-dim": "#bec6e0",
+                "on-tertiary": "#ffffff",
+                "primary": "#004ac6",
+                "surface-container": "#edeeef",
+                "surface-container-low": "#f3f4f5",
+                "surface-container-highest": "#e1e3e4",
+                "surface-dim": "#d9dadb",
+                "background": "#f8f9fa",
+                "primary-fixed-dim": "#b4c5ff",
+                "on-secondary-container": "#5c647a",
+                "secondary": "#565e74",
+                "surface-bright": "#f8f9fa",
+                "on-tertiary-fixed-variant": "#2f2ebe",
+                "surface-container-lowest": "#ffffff",
+                "tertiary-container": "#585be6",
+                "outline-variant": "#c3c6d7",
+                "primary-fixed": "#dbe1ff",
+                "tertiary-fixed-dim": "#c0c1ff",
+                "inverse-primary": "#b4c5ff",
+                "inverse-on-surface": "#f0f1f2",
+                "on-primary-container": "#eeefff",
+                "on-error-container": "#93000a",
+                "error-container": "#ffdad6",
+                "on-primary-fixed": "#00174b",
+                "inverse-surface": "#2e3132",
+                "surface-tint": "#0053db",
+                "on-primary": "#ffffff",
+                "secondary-container": "#dae2fd",
+                "on-primary-fixed-variant": "#003ea8",
+                "on-surface": "#191c1d",
+                "on-background": "#191c1d",
+                "secondary-fixed": "#dae2fd"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+        },
+        "spacing": {
+                "base": "8px",
+                "stack-lg": "48px",
+                "stack-md": "24px",
+                "stack-sm": "12px",
+                "container-max": "1280px",
+                "margin-mobile": "16px",
+                "margin-desktop": "40px",
+                "gutter": "24px"
+        },
+        "fontFamily": {
+                "display": [
+                        "Geist"
+                ],
+                "mono": [
+                        "JetBrains Mono"
+                ],
+                "label-sm": [
+                        "Geist"
+                ],
+                "headline-md": [
+                        "Geist"
+                ],
+                "body-lg": [
+                        "Inter"
+                ],
+                "headline-lg-mobile": [
+                        "Geist"
+                ],
+                "headline-lg": [
+                        "Geist"
+                ],
+                "body-md": [
+                        "Inter"
+                ],
+                "label-md": [
+                        "Geist"
+                ]
+        },
+        "fontSize": {
+                "display": [
+                        "48px",
+                        {
+                                "lineHeight": "56px",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "mono": [
+                        "14px",
+                        {
+                                "lineHeight": "20px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "label-sm": [
+                        "12px",
+                        {
+                                "lineHeight": "16px",
+                                "fontWeight": "600"
+                        }
+                ],
+                "headline-md": [
+                        "24px",
+                        {
+                                "lineHeight": "32px",
+                                "fontWeight": "600"
+                        }
+                ],
+                "body-lg": [
+                        "18px",
+                        {
+                                "lineHeight": "28px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "headline-lg-mobile": [
+                        "24px",
+                        {
+                                "lineHeight": "32px",
+                                "fontWeight": "600"
+                        }
+                ],
+                "headline-lg": [
+                        "32px",
+                        {
+                                "lineHeight": "40px",
+                                "letterSpacing": "-0.01em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "body-md": [
+                        "16px",
+                        {
+                                "lineHeight": "24px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "label-md": [
+                        "14px",
+                        {
+                                "lineHeight": "20px",
+                                "letterSpacing": "0.01em",
+                                "fontWeight": "500"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+<style>
+        .fade-in { animation: fadeIn 0.5s ease-out forwards; opacity: 0; }
+        .delay-100 { animation-delay: 100ms; }
+        .delay-200 { animation-delay: 200ms; }
+        .delay-300 { animation-delay: 300ms; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .card-hover { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .card-hover:hover { transform: translateY(-2px); box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.08); }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<nav class="bg-surface/80 dark:bg-on-surface/80 backdrop-blur-md fixed top-0 w-full border-b border-outline-variant/30 shadow-sm transition-all duration-200 ease-in-out z-50">
+<div class="flex justify-between items-center px-margin-desktop h-16 w-full max-w-container-max mx-auto">
+<div class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim">
+                Voice to Slide Deck Node
+            </div>
+<div class="hidden md:flex gap-6 items-center">
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors" href="index.html">Home</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors" href="dashboard.html">Dashboard</a>
+<a class="font-label-md text-label-md text-primary font-bold border-b-2 border-primary" href="receipt.html">Payments</a>
+</div>
+<div class="flex items-center gap-4 hidden md:flex">
+<button class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors">Log In</button>
+<button class="bg-primary text-on-primary font-label-md text-label-md px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors">Get Started</button>
+</div>
+<button class="md:hidden text-on-surface-variant">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</nav>
+<!-- Main Content -->
+<main class="flex-grow pt-[104px] pb-stack-lg px-margin-mobile md:px-margin-desktop w-full max-w-container-max mx-auto">
+<!-- Header -->
+<div class="text-center mb-stack-lg fade-in">
+<h1 class="font-headline-lg-mobile md:font-display text-headline-lg-mobile md:text-display text-primary mb-stack-sm">Secure Payment</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">
+                Pay only for the audio you process. No subscriptions. Fast and secure x402 payments powered by Algorand.
+            </p>
+</div>
+<!-- Grid Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- LEFT SIDE (Content details) -->
+<div class="lg:col-span-7 space-y-stack-md">
+<!-- Meeting Summary Card -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant/30 p-stack-md shadow-sm card-hover fade-in delay-100">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-stack-sm flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">summarize</span>
+                        Meeting Summary
+                    </h2>
+<div class="space-y-4">
+<div class="flex justify-between items-center py-2 border-b border-outline-variant/20">
+<span class="font-body-md text-body-md text-on-surface-variant">Meeting Name</span>
+<span class="font-label-md text-label-md text-on-surface">Sprint Planning Meeting</span>
+</div>
+<div class="flex justify-between items-center py-2 border-b border-outline-variant/20">
+<span class="font-body-md text-body-md text-on-surface-variant">File Name</span>
+<span class="font-mono text-mono text-on-surface">Sprint_Planning.mp3</span>
+</div>
+<div class="flex justify-between items-center py-2 border-b border-outline-variant/20">
+<span class="font-body-md text-body-md text-on-surface-variant">Audio Duration</span>
+<span class="font-label-md text-label-md text-on-surface">18 Minutes 22 Seconds</span>
+</div>
+<div class="flex justify-between items-center py-2">
+<span class="font-body-md text-body-md text-on-surface-variant">Estimated Slides</span>
+<span class="font-label-md text-label-md text-on-surface bg-primary-container/10 text-primary px-3 py-1 rounded-full">10 Slides</span>
+</div>
+</div>
+</div>
+<!-- Transaction Information Card -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant/30 p-stack-md shadow-sm card-hover fade-in delay-200">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-stack-sm flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">info</span>
+                        Transaction Information
+                    </h3>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-1 uppercase tracking-wider">Merchant</p>
+<p class="font-body-md text-body-md text-on-surface">SlideNode AI</p>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-1 uppercase tracking-wider">Payment Protocol</p>
+<p class="font-body-md text-body-md text-on-surface">x402</p>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-1 uppercase tracking-wider">Settlement Layer</p>
+<p class="font-body-md text-body-md text-on-surface">Algorand</p>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-1 uppercase tracking-wider">Token</p>
+<p class="font-body-md text-body-md text-on-surface">USDC ASA</p>
+</div>
+<div class="sm:col-span-2">
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-1 uppercase tracking-wider">Estimated Confirmation Time</p>
+<p class="font-body-md text-body-md text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary text-sm">bolt</span>
+                                Less than 3 Seconds
+                            </p>
+</div>
+</div>
+</div>
+</div>
+<!-- RIGHT SIDE (Payment / Action) -->
+<div class="lg:col-span-5 space-y-stack-md">
+<!-- Payment Summary Card -->
+<div class="bg-surface-container-lowest rounded-xl border border-primary/20 p-stack-md shadow-sm card-hover relative overflow-hidden fade-in delay-100">
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-bl-full -z-10"></div>
+<h2 class="font-headline-md text-headline-md text-on-surface mb-stack-md">Payment Summary</h2>
+<div class="space-y-4 mb-stack-md">
+<div class="flex justify-between items-center">
+<span class="font-body-md text-body-md text-on-surface-variant">Audio Duration</span>
+<span class="font-label-md text-label-md text-on-surface">18 Minutes</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-body-md text-body-md text-on-surface-variant">Rate</span>
+<span class="font-mono text-mono text-on-surface">0.40 USDC / Minute</span>
+</div>
+<div class="h-px bg-outline-variant/30 my-2"></div>
+<div class="flex justify-between items-center">
+<span class="font-body-md text-body-md text-on-surface-variant">Subtotal</span>
+<span class="font-mono text-mono text-on-surface">7.20 USDC</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-body-md text-body-md text-on-surface-variant">Network Fee</span>
+<span class="font-mono text-mono text-on-surface">0.05 USDC</span>
+</div>
+<div class="h-px bg-outline-variant/30 my-2"></div>
+<div class="flex justify-between items-center">
+<span class="font-headline-md text-headline-md text-on-surface">Total</span>
+<span class="font-headline-md text-headline-md text-primary">7.25 USDC</span>
+</div>
+</div>
+<div class="bg-surface p-4 rounded-lg border border-outline-variant/20 mb-stack-md flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">account_balance_wallet</span>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Network</p>
+<p class="font-label-md text-label-md text-on-surface">Algorand Testnet</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-label-sm text-label-sm text-on-surface-variant">Currency</p>
+<p class="font-label-md text-label-md text-on-surface">USDC</p>
+</div>
+</div>
+<div class="space-y-3">
+<a href="processing.html" class="w-full bg-primary hover:bg-primary/90 text-on-primary font-label-md text-label-md py-4 rounded-lg shadow-sm transition-all transform hover:scale-[1.02] flex items-center justify-center gap-2 no-underline">
+<span class="material-symbols-outlined">lock</span>
+                            Pay &amp; Continue
+                        </a>
+<a href="index.html" class="w-full bg-surface hover:bg-surface-variant text-on-surface font-label-md text-label-md py-3 rounded-lg border border-outline-variant/50 transition-all flex items-center justify-center gap-2 no-underline">
+<span class="material-symbols-outlined">arrow_back</span>
+                            Back to Upload
+                        </a>
+</div>
+</div>
+<!-- Payment Notice Card -->
+<div class="bg-surface-container-low rounded-xl p-4 border border-outline-variant/20 fade-in delay-300">
+<ul class="space-y-2">
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-sm mt-0.5">check_circle</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Secure blockchain payment</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-sm mt-0.5">check_circle</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Pay only once, No subscriptions</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-sm mt-0.5">check_circle</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Instant settlement</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-sm mt-0.5">check_circle</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Transaction receipt generated automatically</span>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<!-- Bottom Security Badges -->
+<div class="mt-stack-lg flex flex-wrap justify-center items-center gap-6 opacity-60 fade-in delay-300">
+<div class="flex items-center gap-2 font-label-sm text-label-sm text-on-surface-variant">
+<span class="material-symbols-outlined">shield</span> Secure Payment
+            </div>
+<div class="flex items-center gap-2 font-label-sm text-label-sm text-on-surface-variant">
+<span class="material-symbols-outlined">timer</span> Instant Settlement
+            </div>
+<div class="flex items-center gap-2 font-label-sm text-label-sm text-on-surface-variant">
+<span class="material-symbols-outlined">currency_exchange</span> Algorand
+            </div>
+<div class="flex items-center gap-2 font-label-sm text-label-sm text-on-surface-variant">
+<span class="material-symbols-outlined">verified</span> x402 Protocol
+            </div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-low dark:bg-on-surface border-t border-outline-variant/20 w-full mt-auto">
+<div class="flex flex-col md:flex-row justify-between items-center py-stack-lg px-margin-desktop w-full max-w-container-max mx-auto opacity-80 hover:opacity-100 transition-opacity">
+<div class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim mb-4 md:mb-0">
+                Voice to Slide Deck Node
+            </div>
+<div class="flex flex-wrap justify-center gap-6">
+<a class="font-label-sm text-label-sm text-on-surface-variant dark:text-outline-variant hover:text-on-surface dark:hover:text-surface-bright transition-colors" href="#">Privacy Policy</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant dark:text-outline-variant hover:text-on-surface dark:hover:text-surface-bright transition-colors" href="#">Terms of Service</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant dark:text-outline-variant hover:text-on-surface dark:hover:text-surface-bright transition-colors" href="#">API Status</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant dark:text-outline-variant hover:text-on-surface dark:hover:text-surface-bright transition-colors" href="#">Twitter</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant dark:text-outline-variant hover:text-on-surface dark:hover:text-surface-bright transition-colors" href="#">LinkedIn</a>
+</div>
+<div class="mt-4 md:mt-0 font-body-md text-body-md text-on-surface-variant text-sm">
+                © 2024 Voice to Slide Deck Node. Built on Blockchain. Powered by AI.
+            </div>
+</div>
+</footer>
+<script type="module">
+  import { initSpotlightBackground } from './src/services/spotlight.ts';
+  initSpotlightBackground();
+</script>
+</body></html>

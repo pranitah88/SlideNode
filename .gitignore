@@ -1,0 +1,42 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Environment & Secret Files (CRITICAL)
+.env
+*.env
+backend/.env
+frontend/.env
+**/merchant_mnemonic.txt
+merchant_mnemonic.txt
+
+# Build Outputs & Compiled Code
+dist/
+**/dist/
+build/
+**/build/
+
+# Audio Uploads & Media Cache
+backend/uploads/*
+**/uploads/*
+!backend/uploads/.gitkeep
+*.wav
+*.mp3
+*.m4a
+*.ogg
+*.webm
+
+# Temporary Archives & Exports
+*.zip
+project_export*
+project_export_all/
+stitch_voice_slide_ai_node*
+zip*_contents/
+scratch/
+
+# OS & Editor Files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log

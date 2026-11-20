@@ -1,0 +1,971 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Voice to Slide Deck Node</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-highest": "#e1e3e4",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed": "#dae2fd",
+                        "on-background": "#191c1d",
+                        "tertiary-fixed": "#e1e0ff",
+                        "tertiary-container": "#585be6",
+                        "surface-tint": "#0053db",
+                        "surface-container": "#edeeef",
+                        "outline": "#737686",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#2f2ebe",
+                        "primary": "#004ac6",
+                        "on-surface-variant": "#434655",
+                        "secondary": "#565e74",
+                        "tertiary-fixed-dim": "#c0c1ff",
+                        "primary-container": "#2563eb",
+                        "inverse-primary": "#b4c5ff",
+                        "on-error": "#ffffff",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "surface-dim": "#d9dadb",
+                        "surface-bright": "#f8f9fa",
+                        "outline-variant": "#c3c6d7",
+                        "on-error-container": "#93000a",
+                        "on-primary-container": "#eeefff",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "secondary-container": "#dae2fd",
+                        "on-primary": "#ffffff",
+                        "on-surface": "#191c1d",
+                        "primary-fixed": "#dbe1ff",
+                        "background": "#f8f9fa",
+                        "on-primary-fixed": "#00174b",
+                        "surface-container-low": "#f3f4f5",
+                        "on-tertiary-fixed": "#07006c",
+                        "surface-variant": "#e1e3e4",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "tertiary": "#3e3fcc",
+                        "inverse-surface": "#2e3132",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-container": "#5c647a",
+                        "inverse-on-surface": "#f0f1f2",
+                        "on-secondary-fixed": "#131b2e",
+                        "surface": "#f8f9fa",
+                        "error": "#ba1a1a",
+                        "on-tertiary-container": "#f1eeff",
+                        "surface-container-high": "#e7e8e9"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "16px",
+                        "container-max": "1280px",
+                        "stack-lg": "48px",
+                        "base": "8px",
+                        "gutter": "24px",
+                        "margin-desktop": "40px",
+                        "stack-sm": "12px",
+                        "stack-md": "24px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Geist"],
+                        "headline-lg": ["Geist"],
+                        "label-md": ["Geist"],
+                        "headline-lg-mobile": ["Geist"],
+                        "mono": ["JetBrains Mono"],
+                        "body-lg": ["Inter"],
+                        "display": ["Geist"],
+                        "body-md": ["Inter"],
+                        "headline-md": ["Geist"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "mono": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+                    },
+                    "animation": {
+                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+                        'page-enter': 'pageEnter 0.6s ease-out forwards',
+                        'flow': 'flowLine 2s linear infinite',
+                    },
+                    "keyframes": {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        pageEnter: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        flowLine: {
+                            '0%': { strokeDashoffset: '24' },
+                            '100%': { strokeDashoffset: '0' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; color: #191c1d; }
+        h1, h2, h3, h4, h5, h6, .font-display, .font-headline-md, .font-headline-lg { font-family: 'Geist', sans-serif; }
+        
+        .animated-line {
+            stroke-dasharray: 4 4;
+            animation: flowLine 2s linear infinite;
+        }
+
+        @media (prefers-reduced-motion: no-preference) {
+            .fade-in-up-element {
+                opacity: 0;
+                transform: translateY(20px);
+                transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            }
+            .fade-in-up-element.is-visible {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            .stagger-1 { transition-delay: 0.1s; animation-delay: 0.1s; }
+            .stagger-2 { transition-delay: 0.2s; animation-delay: 0.2s; }
+            .stagger-3 { transition-delay: 0.3s; animation-delay: 0.3s; }
+            .stagger-4 { transition-delay: 0.4s; animation-delay: 0.4s; }
+            .stagger-5 { transition-delay: 0.5s; animation-delay: 0.5s; }
+        }
+        
+        @media (prefers-reduced-motion: reduce) {
+            .fade-in-up-element {
+                opacity: 1;
+                transform: none;
+                transition: none;
+                animation: none;
+            }
+            .animate-fade-in-up, .animate-page-enter {
+                animation: none;
+                opacity: 1;
+                transform: none;
+            }
+            .hover\:-translate-y-0\.5:hover, .hover\:-translate-y-1:hover, .hover\:-translate-y-2:hover, .hover\:scale-\[1\.02\]:hover {
+                transform: none;
+            }
+            .animated-line {
+                animation: none;
+            }
+        }
+
+        /* Upload card animations */
+        @keyframes uploadCardIn {
+            from { opacity: 0; transform: translateY(16px) scale(0.98); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .upload-card-enter {
+            animation: uploadCardIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .upload-error-enter {
+            animation: uploadCardIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        body, button, div, span, label, h1, h2, h3, h4, p {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        input, textarea, select, [contenteditable="true"] {
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+            user-select: text;
+        }
+    </style>
+</head>
+<body class="bg-background min-h-screen flex flex-col font-body-md text-on-surface">
+<div class="animate-page-enter">
+<!-- TopNavBar -->
+<header class="bg-surface-bright/80 backdrop-blur-md border-b border-outline-variant shadow-sm sticky top-0 z-50 w-full transition-all duration-300">
+<div class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop h-16 max-w-container-max mx-auto">
+<div class="flex items-center gap-2">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="audio-lines" aria-hidden="true" class="lucide lucide-audio-lines text-primary w-8 h-8"><path d="M2 10v3"></path><path d="M6 6v11"></path><path d="M10 3v18"></path><path d="M14 8v7"></path><path d="M18 5v13"></path><path d="M22 10v3"></path></svg>
+<span class="font-display text-headline-md font-bold text-primary">SlideNode</span>
+</div>
+<nav class="hidden md:flex gap-2 items-center">
+<a class="px-4 py-2 text-primary font-medium bg-primary-fixed rounded-full transition-colors duration-200" href="index.html">Home</a>
+<a class="px-4 py-2 text-on-surface-variant font-medium hover:bg-surface-container hover:text-on-surface rounded-full transition-colors duration-200 relative group" href="dashboard.html">
+                        Dashboard
+                        <span class="absolute bottom-1 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-1/2 opacity-0 group-hover:opacity-100"></span>
+</a>
+</nav>
+<div class="flex items-center gap-4" id="global-navbar-controls">
+  <!-- Injected dynamically by navbar service -->
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow flex flex-col relative w-full">
+<!-- Hero Section -->
+<section class="w-full relative min-h-[80vh] flex flex-col items-center justify-center overflow-hidden py-20 px-margin-mobile md:px-margin-desktop">
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-primary/20 rounded-full blur-3xl pointer-events-none -z-10"></div>
+<div class="relative z-10 max-w-container-max mx-auto w-full flex flex-col items-center text-center gap-stack-md">
+<div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary-fixed/50 text-primary font-label-sm w-max border border-primary/20 shadow-sm backdrop-blur-sm opacity-0 animate-fade-in-up stagger-1">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                        AI-Powered Presentations
+                    </div>
+<h1 class="font-display text-headline-lg-mobile md:text-[64px] leading-tight text-on-surface font-bold max-w-4xl opacity-0 animate-fade-in-up stagger-2 relative">
+                        Convert Meeting Audio into <span class="text-primary relative inline-block">AI-Powered<div class="absolute -bottom-2 left-0 w-full h-3 bg-tertiary-fixed-dim -z-10 rounded-full opacity-50"></div></span> Presentation Slides
+                    </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto opacity-0 animate-fade-in-up stagger-3">
+                        Upload your meeting recordings. Our advanced AI transcribes, extracts action items, creates perfect presentation slides, and acts as a conversational meeting assistant. Fast, secure, and powered by advanced Google Gemini AI.
+                    </p>
+<div class="flex flex-col sm:flex-row gap-4 pt-6 opacity-0 animate-fade-in-up stagger-4">
+<!-- Hidden file input for audio uploads (no accept filter so Windows File Explorer displays all files in Downloads) -->
+<input type="file" id="audioFileInput" class="hidden">
+<button id="recordMeetingBtn" type="button" class="bg-primary hover:bg-primary-container text-on-primary font-label-md px-8 py-4 rounded-lg flex items-center justify-center gap-2 shadow-lg hover:shadow-xl hover:-translate-y-0.5 hover:scale-[1.02] transition-all duration-200 cursor-pointer">
+  Record Meeting
+</button>
+<button id="uploadMeetingBtn" type="button" class="bg-surface-container-lowest/80 backdrop-blur-md hover:bg-surface-container hover:text-primary text-on-surface font-label-md px-8 py-4 rounded-lg flex items-center justify-center gap-2 border border-outline-variant shadow-sm hover:shadow-md hover:-translate-y-0.5 hover:scale-[1.02] transition-all duration-200 cursor-pointer">
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="upload-cloud" aria-hidden="true" class="lucide lucide-upload-cloud w-5 h-5"><path d="M12 13v8"></path><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"></path><path d="m8 17 4-4 4 4"></path></svg>
+  Upload Meeting
+</button>
+</div>
+<div class="mt-4 font-medium text-sm text-on-surface-variant opacity-0 animate-fade-in-up stagger-5 flex items-center justify-center gap-2">
+    ⚡ AI Powered • High-Density Decks • Instant PowerPoint Export
+</div>
+</div>
+<!-- Upload Result Container (injected dynamically) -->
+<div id="uploadResultContainer" class="w-full max-w-2xl mx-auto mt-12 px-margin-mobile md:px-0"></div>
+</section>
+
+<!-- Recent Meetings Section -->
+<section id="recent-meetings-section" class="w-full bg-surface py-12 border-b border-outline-variant hidden">
+  <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop space-y-6">
+    <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2">
+      <div>
+        <h2 class="font-display text-2xl font-bold text-on-surface flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary w-6 h-6"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg> Recent Meetings
+        </h2>
+        <p class="text-on-surface-variant text-sm mt-0.5">Recorded and uploaded presentations</p>
+      </div>
+      <a href="dashboard.html" class="text-primary hover:underline text-xs font-semibold flex items-center gap-1">
+        Open Dashboard <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      </a>
+    </div>
+
+    <!-- Grid Container -->
+    <div id="recent-meetings-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Dynamically filled by home.ts -->
+    </div>
+  </div>
+</section>
+<!-- AI Pipeline Visualization -->
+<section class="w-full bg-surface-container-low py-24 border-y border-outline-variant fade-in-up-element relative overflow-hidden">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop flex flex-col gap-12 relative z-10">
+<div class="text-center max-w-2xl mx-auto flex flex-col gap-3">
+<span class="text-primary font-semibold text-sm tracking-wider uppercase">End-to-End AI Processing</span>
+<h2 class="font-display text-headline-lg-mobile md:text-headline-lg text-on-surface font-semibold">The AI Transformation Pipeline</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Watch how raw audio becomes a fully structured presentation deck in seconds.</p>
+</div>
+<div class="relative w-full max-w-5xl mx-auto overflow-x-auto pb-8 scrollbar-hide">
+<div class="flex items-center min-w-[900px] justify-between relative px-4">
+<!-- Animated connecting line background -->
+<div class="absolute left-10 right-10 top-1/2 -translate-y-1/2 h-0.5 bg-outline-variant/30 -z-10"></div>
+<svg class="absolute left-10 right-10 top-1/2 -translate-y-1/2 h-0.5 w-[calc(100%-80px)] -z-10" preserveAspectRatio="none">
+<line class="text-primary animated-line" stroke="currentColor" stroke-width="2" x1="0" x2="100%" y1="0" y2="0"></line>
+</svg>
+<!-- Nodes -->
+<div class="flex flex-col items-center gap-3 w-24">
+<div class="w-14 h-14 rounded-xl bg-surface-container-lowest shadow-md flex items-center justify-center border border-outline-variant/50 text-on-surface-variant z-10">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-lucide="mic" class="w-6 h-6"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" x2="12" y1="19" y2="22"></line></svg>
+</div>
+<span class="text-xs font-semibold text-center text-on-surface">Audio</span>
+</div>
+<div class="flex flex-col items-center gap-3 w-24">
+<div class="w-14 h-14 rounded-xl bg-surface-container-lowest shadow-md flex items-center justify-center border border-outline-variant/50 text-on-surface-variant z-10">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-lucide="file-audio" class="w-6 h-6"><path d="M17.5 22h.5c.5 0 1-.2 1.4-.6.4-.4.6-.9.6-1.4V7.5L14.5 2H6c-.5 0-1 .2-1.4.6C4.2 3 4 3.5 4 4v3"></path><polyline points="14 2 14 8 20 8"></polyline><path d="M10 20v-1a2 2 0 1 1 4 0v1a2 2 0 1 1-4 0Z"></path><path d="M6 20v-1a2 2 0 1 0-4 0v1a2 2 0 1 0 4 0Z"></path><line x1="2" x2="2" y1="19" y2="21"></line><line x1="14" x2="14" y1="19" y2="21"></line><line x1="6" x2="10" y1="20" y2="20"></line></svg>
+</div>
+<span class="text-xs font-semibold text-center text-on-surface">Speech-to-Text</span>
+</div>
+<div class="flex flex-col items-center gap-3 w-24">
+<div class="w-14 h-14 rounded-xl bg-primary-fixed shadow-lg flex items-center justify-center border border-primary/30 text-primary z-10 scale-110">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-lucide="brain-circuit" class="w-6 h-6"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"></path><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"></path><path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4"></path><path d="M17.599 6.5a3 3 0 0 0 .399-1.375"></path><path d="M6.003 5.125A3 3 0 0 0 6.401 6.5"></path><path d="M3.477 10.896a4 4 0 0 1 .585-.396"></path><path d="M19.938 10.5a4 4 0 0 1 .585.396"></path><path d="M6 18a4 4 0 0 1-1.967-.516"></path><path d="M19.967 17.484A4 4 0 0 1 18 18"></path></svg>
+</div>
+<span class="text-xs font-bold text-center text-primary">AI Analysis</span>
+</div>
+<div class="flex flex-col items-center gap-3 w-24">
+<div class="w-14 h-14 rounded-xl bg-surface-container-lowest shadow-md flex items-center justify-center border border-outline-variant/50 text-on-surface-variant z-10">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-lucide="users" class="w-6 h-6"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+</div>
+<span class="text-xs font-semibold text-center text-on-surface">Speaker Detect</span>
+</div>
+<div class="flex flex-col items-center gap-3 w-24">
+<div class="w-14 h-14 rounded-xl bg-surface-container-lowest shadow-md flex items-center justify-center border border-outline-variant/50 text-on-surface-variant z-10">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-lucide="check-square" class="w-6 h-6"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+</div>
+<span class="text-xs font-semibold text-center text-on-surface">Action Items</span>
+</div>
+<div class="flex flex-col items-center gap-3 w-24">
+<div class="w-14 h-14 rounded-xl bg-surface-container-lowest shadow-md flex items-center justify-center border border-outline-variant/50 text-secondary z-10">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-lucide="presentation" class="w-6 h-6"><path d="M2 3h20"></path><path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3"></path><path d="m7 21 5-5 5 5"></path></svg>
+</div>
+<span class="text-xs font-semibold text-center text-on-surface">Generate PPTX</span>
+</div>
+<div class="flex flex-col items-center gap-3 w-24">
+<div class="w-14 h-14 rounded-xl bg-surface-container-lowest shadow-md flex items-center justify-center border border-outline-variant/50 text-tertiary z-10">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-lucide="message-square" class="w-6 h-6"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+</div>
+<span class="text-xs font-semibold text-center text-on-surface">Meeting Chat</span>
+</div>
+<div class="flex flex-col items-center gap-3 w-24">
+<div class="w-14 h-14 rounded-xl bg-surface-container-lowest shadow-md flex items-center justify-center border border-outline-variant/50 text-on-surface-variant z-10">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-lucide="download" class="w-6 h-6"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg>
+</div>
+<span class="text-xs font-semibold text-center text-on-surface">Download</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Why SlideNode Section -->
+<section class="w-full bg-surface-bright py-24 fade-in-up-element border-b border-outline-variant">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop flex flex-col gap-12">
+<div class="text-center max-w-2xl mx-auto flex flex-col gap-4">
+<h2 class="font-display text-headline-lg-mobile md:text-headline-lg text-on-surface font-semibold">Why SlideNode?</h2>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+<div class="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col gap-4">
+<div class="w-12 h-12 rounded-full bg-primary-fixed flex items-center justify-center text-primary">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-lucide="zap" class="w-6 h-6"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+</div>
+<h3 class="font-headline-md text-lg font-semibold text-on-surface">95% Faster</h3>
+<p class="text-sm text-on-surface-variant">Presentation creation from raw audio.</p>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col gap-4">
+<div class="w-12 h-12 rounded-full bg-tertiary-fixed flex items-center justify-center text-tertiary">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-lucide="credit-card" class="w-6 h-6"><rect width="20" height="14" x="2" y="5" rx="2"></rect><line x1="2" x2="22" y1="10" y2="10"></line></svg>
+</div>
+<h3 class="font-headline-md text-lg font-semibold text-on-surface">Pay Per Use</h3>
+<p class="text-sm text-on-surface-variant">No subscriptions. Pay only for what you process.</p>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col gap-4">
+<div class="w-12 h-12 rounded-full bg-primary-fixed flex items-center justify-center text-primary">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-lucide="bot" class="w-6 h-6"><path d="M12 8V4H8"></path><rect width="16" height="12" x="4" y="8" rx="2"></rect><path d="M2 14h2"></path><path d="M20 14h2"></path><path d="M15 13v2"></path><path d="M9 13v2"></path></svg>
+</div>
+<h3 class="font-headline-md text-lg font-semibold text-on-surface">AI Powered</h3>
+<p class="text-sm text-on-surface-variant">Advanced LLMs extract deep meeting intelligence.</p>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col gap-4">
+<div class="w-12 h-12 rounded-full bg-secondary-fixed flex items-center justify-center text-secondary">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-lucide="shield-check" class="w-6 h-6"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="m9 12 2 2 4-4"></path></svg>
+</div>
+<h3 class="font-headline-md text-lg font-semibold text-on-surface">Instant Conversion</h3>
+<p class="text-sm text-on-surface-variant">Turn audio directly into executive-ready presentation decks.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Features Grid -->
+<section class="w-full bg-surface-container-lowest py-24 fade-in-up-element">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop flex flex-col gap-12">
+<div class="text-center max-w-2xl mx-auto flex flex-col gap-4">
+<h2 class="font-display text-headline-lg-mobile md:text-headline-lg text-on-surface font-semibold">Intelligent Meeting Analysis</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Everything you need to turn raw audio into structured, actionable, and presentable data.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Feature 1 -->
+<div class="bg-surface-bright rounded-2xl border border-outline-variant p-8 flex flex-col gap-6 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex-1">
+<div class="w-14 h-14 rounded-xl bg-primary-fixed/50 text-primary flex items-center justify-center">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-lucide="presentation" class="w-7 h-7"><path d="M2 3h20"></path><path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3"></path><path d="m7 21 5-5 5 5"></path></svg>
+</div>
+<div>
+<h3 class="font-headline-md text-xl font-bold text-on-surface mb-2">AI Slide Generator</h3>
+<p class="text-sm text-on-surface-variant mb-6 min-h-[60px]">Automatically structures meeting insights into beautifully formatted presentation decks, ready to export.</p>
+<ul class="space-y-3 mb-6 flex-grow">
+<li class="flex items-start gap-2 text-sm text-on-surface"><svg viewBox="0 0 24 24" data-lucide="check" class="w-4 h-4 text-primary mt-0.5 shrink-0"><path d="M20 6 9 17l-5-5"></path></svg> Auto-layout generation</li>
+<li class="flex items-start gap-2 text-sm text-on-surface"><svg viewBox="0 0 24 24" data-lucide="check" class="w-4 h-4 text-primary mt-0.5 shrink-0"><path d="M20 6 9 17l-5-5"></path></svg> Smart bullet point extraction</li>
+<li class="flex items-start gap-2 text-sm text-on-surface"><svg viewBox="0 0 24 24" data-lucide="check" class="w-4 h-4 text-primary mt-0.5 shrink-0"><path d="M20 6 9 17l-5-5"></path></svg> Native PPTX export</li>
+</ul>
+</div>
+<a class="text-primary text-sm font-semibold flex items-center gap-1 hover:gap-2 transition-all mt-auto w-max" href="#">Learn More <svg viewBox="0 0 24 24" data-lucide="arrow-right" class="w-4 h-4"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></a>
+</div>
+<!-- Feature 2 -->
+<div class="bg-surface-bright rounded-2xl border border-outline-variant p-8 flex flex-col gap-6 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex-1">
+<div class="w-14 h-14 rounded-xl bg-tertiary-fixed/50 text-tertiary flex items-center justify-center">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-lucide="users" class="w-7 h-7"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+</div>
+<div>
+<h3 class="font-headline-md text-xl font-bold text-on-surface mb-2">Speaker Detection</h3>
+<p class="text-sm text-on-surface-variant mb-6 min-h-[60px]">Accurately identify and label multiple speakers in your transcripts automatically.</p>
+<ul class="space-y-3 mb-6 flex-grow">
+<li class="flex items-start gap-2 text-sm text-on-surface"><svg viewBox="0 0 24 24" data-lucide="check" class="w-4 h-4 text-tertiary mt-0.5 shrink-0"><path d="M20 6 9 17l-5-5"></path></svg> Multi-speaker diarization</li>
+<li class="flex items-start gap-2 text-sm text-on-surface"><svg viewBox="0 0 24 24" data-lucide="check" class="w-4 h-4 text-tertiary mt-0.5 shrink-0"><path d="M20 6 9 17l-5-5"></path></svg> Custom speaker naming</li>
+<li class="flex items-start gap-2 text-sm text-on-surface"><svg viewBox="0 0 24 24" data-lucide="check" class="w-4 h-4 text-tertiary mt-0.5 shrink-0"><path d="M20 6 9 17l-5-5"></path></svg> Time-stamped attributions</li>
+</ul>
+</div>
+<a class="text-tertiary text-sm font-semibold flex items-center gap-1 hover:gap-2 transition-all mt-auto w-max" href="#">Learn More <svg viewBox="0 0 24 24" data-lucide="arrow-right" class="w-4 h-4"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></a>
+</div>
+<!-- Feature 3 -->
+<div class="bg-surface-bright rounded-2xl border border-outline-variant p-8 flex flex-col gap-6 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex-1">
+<div class="w-14 h-14 rounded-xl bg-primary-fixed/50 text-primary flex items-center justify-center">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-lucide="message-square-text" class="w-7 h-7"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path><path d="M13 8H7"></path><path d="M17 12H7"></path></svg>
+</div>
+<div>
+<h3 class="font-headline-md text-xl font-bold text-on-surface mb-2">AI Meeting Chat</h3>
+<p class="text-sm text-on-surface-variant mb-6 min-h-[60px]">Query your meeting context directly. Ask questions and get instant answers based on the audio.</p>
+<ul class="space-y-3 mb-6 flex-grow">
+<li class="flex items-start gap-2 text-sm text-on-surface"><svg viewBox="0 0 24 24" data-lucide="check" class="w-4 h-4 text-primary mt-0.5 shrink-0"><path d="M20 6 9 17l-5-5"></path></svg> Context-aware QA</li>
+<li class="flex items-start gap-2 text-sm text-on-surface"><svg viewBox="0 0 24 24" data-lucide="check" class="w-4 h-4 text-primary mt-0.5 shrink-0"><path d="M20 6 9 17l-5-5"></path></svg> Source citations</li>
+<li class="flex items-start gap-2 text-sm text-on-surface"><svg viewBox="0 0 24 24" data-lucide="check" class="w-4 h-4 text-primary mt-0.5 shrink-0"><path d="M20 6 9 17l-5-5"></path></svg> Semantic search</li>
+</ul>
+</div>
+<a class="text-primary text-sm font-semibold flex items-center gap-1 hover:gap-2 transition-all mt-auto w-max" href="#">Learn More <svg viewBox="0 0 24 24" data-lucide="arrow-right" class="w-4 h-4"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></a>
+</div>
+<!-- Feature 4 -->
+<div class="bg-surface-bright rounded-2xl border border-outline-variant p-8 flex flex-col gap-6 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex-1">
+<div class="w-14 h-14 rounded-xl bg-secondary-fixed/50 text-secondary flex items-center justify-center">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-lucide="list-checks" class="w-7 h-7"><path d="m3 17 2 2 4-4"></path><path d="m3 7 2 2 4-4"></path><path d="M13 6h8"></path><path d="M13 12h8"></path><path d="M13 18h8"></path></svg>
+</div>
+<div>
+<h3 class="font-headline-md text-xl font-bold text-on-surface mb-2">Action Item Tracker</h3>
+<p class="text-sm text-on-surface-variant mb-6 min-h-[60px]">Automatically extract tasks, deadlines, and owners from the conversation.</p>
+<ul class="space-y-3 mb-6 flex-grow">
+<li class="flex items-start gap-2 text-sm text-on-surface"><svg viewBox="0 0 24 24" data-lucide="check" class="w-4 h-4 text-secondary mt-0.5 shrink-0"><path d="M20 6 9 17l-5-5"></path></svg> Owner assignment</li>
+<li class="flex items-start gap-2 text-sm text-on-surface"><svg viewBox="0 0 24 24" data-lucide="check" class="w-4 h-4 text-secondary mt-0.5 shrink-0"><path d="M20 6 9 17l-5-5"></path></svg> Deadline extraction</li>
+<li class="flex items-start gap-2 text-sm text-on-surface"><svg viewBox="0 0 24 24" data-lucide="check" class="w-4 h-4 text-secondary mt-0.5 shrink-0"><path d="M20 6 9 17l-5-5"></path></svg> Export to task managers</li>
+</ul>
+</div>
+<a class="text-secondary text-sm font-semibold flex items-center gap-1 hover:gap-2 transition-all mt-auto w-max" href="#">Learn More <svg viewBox="0 0 24 24" data-lucide="arrow-right" class="w-4 h-4"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></a>
+</div>
+<!-- Feature 5 -->
+<div class="bg-surface-bright rounded-2xl border border-outline-variant p-8 flex flex-col gap-6 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex-1">
+<div class="w-14 h-14 rounded-xl bg-tertiary-fixed/50 text-tertiary flex items-center justify-center">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-lucide="mic-2" class="w-7 h-7"><path d="m12 8-9.04 9.06a2.82 2.82 0 1 0 3.98 3.98L16 12"></path><circle cx="17" cy="7" r="5"></circle></svg>
+</div>
+<div>
+<h3 class="font-headline-md text-xl font-bold text-on-surface mb-2">Voice Commands</h3>
+<p class="text-sm text-on-surface-variant mb-6 min-h-[60px]">Trigger specific slide generation actions using voice cues during your meeting.</p>
+<ul class="space-y-3 mb-6 flex-grow">
+<li class="flex items-start gap-2 text-sm text-on-surface"><svg viewBox="0 0 24 24" data-lucide="check" class="w-4 h-4 text-tertiary mt-0.5 shrink-0"><path d="M20 6 9 17l-5-5"></path></svg> Custom wake words</li>
+<li class="flex items-start gap-2 text-sm text-on-surface"><svg viewBox="0 0 24 24" data-lucide="check" class="w-4 h-4 text-tertiary mt-0.5 shrink-0"><path d="M20 6 9 17l-5-5"></path></svg> Real-time highlighting</li>
+<li class="flex items-start gap-2 text-sm text-on-surface"><svg viewBox="0 0 24 24" data-lucide="check" class="w-4 h-4 text-tertiary mt-0.5 shrink-0"><path d="M20 6 9 17l-5-5"></path></svg> Intent recognition</li>
+</ul>
+</div>
+<a class="text-tertiary text-sm font-semibold flex items-center gap-1 hover:gap-2 transition-all mt-auto w-max" href="#">Learn More <svg viewBox="0 0 24 24" data-lucide="arrow-right" class="w-4 h-4"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></a>
+</div>
+<!-- Feature 6 -->
+<div class="bg-surface-bright rounded-2xl border border-outline-variant p-8 flex flex-col gap-6 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex-1">
+<div class="w-14 h-14 rounded-xl bg-primary-fixed/50 text-primary flex items-center justify-center">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-lucide="sparkles" class="w-7 h-7"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path></svg>
+</div>
+<div>
+<h3 class="font-headline-md text-xl font-bold text-on-surface mb-2">Gemini AI Engine</h3>
+<p class="text-sm text-on-surface-variant mb-6 min-h-[60px]">State-of-the-art speech transcription and structured deck synthesis.</p>
+<ul class="space-y-3 mb-6 flex-grow">
+<li class="flex items-start gap-2 text-sm text-on-surface"><svg viewBox="0 0 24 24" data-lucide="check" class="w-4 h-4 text-primary mt-0.5 shrink-0"><path d="M20 6 9 17l-5-5"></path></svg> Multi-Speaker Detection</li>
+<li class="flex items-start gap-2 text-sm text-on-surface"><svg viewBox="0 0 24 24" data-lucide="check" class="w-4 h-4 text-primary mt-0.5 shrink-0"><path d="M20 6 9 17l-5-5"></path></svg> Action Items & Key Decisions</li>
+<li class="flex items-start gap-2 text-sm text-on-surface"><svg viewBox="0 0 24 24" data-lucide="check" class="w-4 h-4 text-primary mt-0.5 shrink-0"><path d="M20 6 9 17l-5-5"></path></svg> Native PowerPoint .pptx Export</li>
+</ul>
+</div>
+<a class="text-primary text-sm font-semibold flex items-center gap-1 hover:gap-2 transition-all mt-auto w-max" href="#">Learn More <svg viewBox="0 0 24 24" data-lucide="arrow-right" class="w-4 h-4"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></a>
+</div>
+</div>
+</div>
+</section>
+<!-- Architecture Section -->
+<section class="w-full bg-surface-container-low py-24 border-t border-outline-variant fade-in-up-element overflow-hidden">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop flex flex-col gap-12">
+<div class="text-center max-w-2xl mx-auto flex flex-col gap-4">
+<h2 class="font-display text-headline-lg-mobile md:text-headline-lg text-on-surface font-semibold">Architecture</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Built on a modern stack for speed, reliability, and high-fidelity presentations.</p>
+</div>
+<div class="relative w-full overflow-x-auto pb-8 scrollbar-hide">
+<div class="flex items-center min-w-[1000px] justify-center gap-4 font-mono text-sm font-medium relative py-4">
+<!-- Animated connecting line background -->
+<div class="absolute left-10 right-10 top-1/2 -translate-y-1/2 h-0.5 bg-outline-variant/30 -z-10"></div>
+<svg class="absolute left-10 right-10 top-1/2 -translate-y-1/2 h-0.5 w-[calc(100%-80px)] -z-10" preserveAspectRatio="none">
+<line class="text-outline-variant animated-line" stroke="currentColor" stroke-width="2" x1="0" x2="100%" y1="0" y2="0"></line>
+</svg>
+<div class="px-5 py-3 bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm text-on-surface z-10 hover:-translate-y-1 transition-transform">Frontend</div>
+<div class="px-5 py-3 bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm text-on-surface z-10 hover:-translate-y-1 transition-transform">Node.js + Hono</div>
+<div class="px-5 py-3 bg-primary-fixed border border-primary/30 text-primary rounded-xl shadow-sm flex items-center gap-2 z-10 hover:-translate-y-1 transition-transform"><svg viewBox="0 0 24 24" data-lucide="sparkles" class="w-4 h-4"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path></svg> Gemini STT</div>
+<div class="px-5 py-3 bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm text-on-surface z-10 hover:-translate-y-1 transition-transform">Supabase</div>
+<div class="px-5 py-3 bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm text-on-surface z-10 hover:-translate-y-1 transition-transform">Gemini LLM</div>
+<div class="px-5 py-3 bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm text-on-surface z-10 hover:-translate-y-1 transition-transform">Slide Generator</div>
+<div class="px-5 py-3 bg-[#D04423]/10 border border-[#D04423]/30 text-[#A0331A] rounded-xl shadow-sm flex items-center gap-2 z-10 hover:-translate-y-1 transition-transform"><svg class="w-4 h-4" data-lucide="file-presentation" viewBox="0 0 24 24"><path d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v4"></path><polyline points="14 2 14 8 20 8"></polyline><path d="M2 15h10"></path><path d="m9 18 3-3-3-3"></path></svg> PowerPoint</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-highest border-t border-outline-variant w-full mt-auto">
+<div class="w-full py-stack-lg px-margin-mobile md:px-margin-desktop grid grid-cols-1 md:grid-cols-4 gap-gutter max-w-container-max mx-auto">
+<div class="flex flex-col gap-4 col-span-1 md:col-span-2">
+<div class="flex items-center gap-2">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="audio-lines" aria-hidden="true" class="lucide lucide-audio-lines text-primary w-6 h-6"><path d="M2 10v3"></path><path d="M6 6v11"></path><path d="M10 3v18"></path><path d="M14 8v7"></path><path d="M18 5v13"></path><path d="M22 10v3"></path></svg>
+<span class="font-display text-headline-md text-primary font-bold">SlideNode</span>
+</div>
+<p class="font-body-md text-sm text-on-surface-variant max-w-sm">
+                        © 2024 SlideNode AI. Voice to Presentation Engine.
+                    </p>
+</div>
+<div class="flex flex-col gap-3">
+<span class="font-label-sm text-xs font-bold text-on-surface uppercase tracking-wider">Legal</span>
+<a class="text-sm text-on-surface-variant hover:text-primary transition-all duration-200" href="#">Privacy Policy</a>
+<a class="text-sm text-on-surface-variant hover:text-primary transition-all duration-200" href="#">Terms of Service</a>
+</div>
+<div class="flex flex-col gap-3">
+<span class="font-label-sm text-xs font-bold text-on-surface uppercase tracking-wider">Developers</span>
+<a class="text-sm text-on-surface-variant hover:text-primary transition-all duration-200" href="#">API Docs</a>
+<a class="text-sm text-on-surface-variant hover:text-primary transition-all duration-200" href="#">Status</a>
+</div>
+</div>
+</footer>
+</div>
+    <script type="module">
+        import { auth } from './src/services/auth.ts';
+        import { initNavbarControls } from './src/services/navbar.ts';
+
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const user = await auth.initAuthGuard(true);
+            if (!user) return;
+            await initNavbarControls();
+            const fadeElements = document.querySelectorAll('.fade-in-up-element');
+            fadeElements.forEach(el => observer.observe(el));
+        });
+
+        // ── Upload Meeting Module ──────────────────────────────────────
+        const UploadModule = (() => {
+            // Constants
+            const ALLOWED_EXTENSIONS = ['.mp3', '.wav', '.m4a', '.aac', '.ogg', '.webm', '.mp4', '.flac'];
+            const MAX_SIZE_BYTES = 100 * 1024 * 1024; // 100 MB
+
+            // State
+            let selectedFile = null;
+            let actualDuration = null;
+
+            // DOM refs
+            const fileInput    = document.getElementById('audioFileInput');
+            const uploadBtn    = document.getElementById('uploadMeetingBtn');
+            const resultBox    = document.getElementById('uploadResultContainer');
+
+            // Helpers
+            function getExtension(name) {
+                if (!name) return '';
+                const idx = name.lastIndexOf('.');
+                return idx !== -1 ? name.slice(idx).toLowerCase() : '';
+            }
+
+            function formatBytes(bytes) {
+                if (!bytes || isNaN(bytes) || bytes <= 0) return '0 Bytes';
+                const k = 1024, sizes = ['Bytes','KB','MB','GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+
+            function isValidAudioFile(file) {
+                if (!file) return false;
+                const ext = getExtension(file.name).toLowerCase();
+                const ALLOWED_EXTENSIONS = ['.mp3', '.mpeg', '.mpg', '.wav', '.m4a', '.aac', '.ogg', '.webm', '.mp4', '.flac', '.opus', '.wma'];
+                if (ext && ALLOWED_EXTENSIONS.includes(ext)) return true;
+                if (file.type && (file.type.startsWith('audio/') || file.type.startsWith('video/') || file.type === 'application/octet-stream')) return true;
+                if (!file.type || file.type === '' || file.type === 'application/octet-stream') return true;
+                return false;
+            }
+            
+            function formatDuration(seconds) {
+                if (!seconds || isNaN(seconds) || seconds <= 0 || seconds === Infinity) return '—';
+                const secs = Math.round(seconds);
+                const h = Math.floor(secs / 3600);
+                const m = Math.floor((secs % 3600) / 60);
+                const s = Math.floor(secs % 60);
+                if (h > 0) return `${h}h ${m}m${s > 0 ? ` ${s}s` : ''}`;
+                if (m > 0) return `${m}m ${s}s`;
+                return `${s}s`;
+            }
+
+            // Renderers
+            function renderCard(file, durationStr = '—', errorMsg = null) {
+                const hasFile = file != null;
+                const rawExt = hasFile ? getExtension(file.name).replace('.', '').toUpperCase() : '';
+                const ext = rawExt || (hasFile ? 'AUDIO' : '—');
+                const fileName = hasFile ? file.name : '—';
+                const fileSize = hasFile ? formatBytes(file.size) : '—';
+                const duration = hasFile ? (durationStr || 'Calculating...') : '—';
+                const statusText = errorMsg ? (hasFile ? 'Upload Error' : 'Invalid File') : (hasFile ? 'Ready for Upload' : 'Waiting for File');
+                const btnState = hasFile ? '' : 'disabled';
+                const btnClass = hasFile ? 'bg-primary hover:bg-primary-container text-on-primary hover:shadow-xl hover:-translate-y-0.5 hover:scale-[1.02] cursor-pointer' : 'bg-surface-container-highest text-on-surface-variant cursor-not-allowed opacity-70';
+                
+                let errorHtml = '';
+                if (errorMsg) {
+                    errorHtml = `
+                    <div class="mb-4 bg-error-container/60 backdrop-blur-sm rounded-xl border border-error/20 p-4 flex items-start gap-3 fade-in">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-5 h-5 text-error mt-0.5 shrink-0"><circle cx="12" cy="12" r="10"></circle><line x1="15" x2="9" y1="9" y2="15"></line><line x1="9" x2="15" y1="9" y2="15"></line></svg>
+                        <p class="font-body-md text-body-md text-on-error-container">${errorMsg}</p>
+                    </div>`;
+                }
+
+                resultBox.innerHTML = `
+                <div class="upload-card-enter bg-surface-container-lowest rounded-2xl border border-primary/20 p-6 md:p-8 shadow-lg relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-28 h-28 bg-primary/5 rounded-bl-full pointer-events-none"></div>
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-5 h-5 text-primary"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+                        </div>
+                        <h3 class="font-headline-md text-headline-md text-on-surface">${hasFile ? 'File Selected' : 'Upload Meeting Audio'}</h3>
+                    </div>
+                    
+                    ${errorHtml}
+                    
+                            <span class="font-label-md text-label-md text-on-surface">${fileSize}</span>
+                        </div>
+                        <div class="flex justify-between items-center py-2 border-b border-outline-variant/20">
+                            <span class="font-body-md text-body-md text-on-surface-variant">File Type</span>
+                            <span class="font-mono text-mono text-on-surface">${ext}</span>
+                        </div>
+                        <div class="flex justify-between items-center py-2 border-b border-outline-variant/20">
+                            <span class="font-body-md text-body-md text-on-surface-variant">Estimated Duration</span>
+                            <span class="font-label-md text-label-md text-on-surface" id="durationDisplay">${duration}</span>
+                        </div>
+                        <div class="flex justify-between items-center py-2">
+                            <span class="font-body-md text-body-md text-on-surface-variant">Status</span>
+                            <span class="inline-flex items-center gap-1.5 font-label-md text-label-md text-primary bg-primary-fixed/50 px-3 py-1 rounded-full border border-primary/20">
+                                ${hasFile ? '<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>' : ''}
+                                ${statusText}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <button id="changeFileBtn" type="button" class="flex-1 bg-surface-container-lowest border border-outline-variant text-on-surface font-label-md px-6 py-3 rounded-lg hover:bg-surface-container hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"></path><path d="M16 16h5v5"></path></svg>
+                            Change File
+                        </button>
+                        <button id="continueBtn" type="button" ${btnState} class="flex-1 font-label-md px-6 py-3 rounded-lg shadow-lg transition-all duration-200 flex items-center justify-center gap-2 ${btnClass}">
+                            Continue
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+                        </button>
+                    </div>
+                </div>`;
+
+                // Bind action buttons
+                const changeBtn = document.getElementById('changeFileBtn');
+                if (changeBtn) {
+                    changeBtn.onclick = () => fileInput.click();
+                }
+                const continueBtn = document.getElementById('continueBtn');
+                if (continueBtn && hasFile) {
+                    continueBtn.onclick = handleContinue;
+                }
+            }
+
+            // Handlers
+            function handleFileSelect(e) {
+                const file = e.target.files?.[0];
+                if (!file) return;
+
+                console.log("[AUDIO FILE DEBUG]", {
+                  name: file.name,
+                  size: file.size,
+                  type: file.type,
+                  extension: getExtension(file.name)
+                });
+
+                if (!isValidAudioFile(file)) {
+                    selectedFile = file;
+                    actualDuration = '—';
+                    renderCard(file, '—', 'Unsupported file format. Please upload an MP3, WAV, M4A, AAC, OGG, WEBM, or MP4 file.');
+                    resultBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    return;
+                }
+
+                const MAX_AUDIO_FILE_SIZE = 100 * 1024 * 1024; // 100 MB
+                if (file.size > MAX_AUDIO_FILE_SIZE) {
+                    selectedFile = file;
+                    actualDuration = '—';
+                    renderCard(file, '—', 'Audio file is too large. Maximum supported size is 100 MB.');
+                    resultBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    return;
+                }
+
+                selectedFile = file;
+                selectedDurationSeconds = 0;
+                actualDuration = 'Calculating...';
+                
+                renderCard(file, actualDuration, null);
+                resultBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+                const objectUrl = URL.createObjectURL(file);
+                const audio = new Audio();
+
+                const setDetectedDuration = (durSec) => {
+                    if (!durSec || isNaN(durSec) || durSec <= 0 || durSec === Infinity) return;
+                    selectedDurationSeconds = Math.round(durSec);
+                    actualDuration = formatDuration(selectedDurationSeconds);
+                    const durationEl = document.getElementById('durationDisplay');
+                    if (durationEl) durationEl.textContent = actualDuration;
+                };
+
+                audio.onloadedmetadata = () => {
+                    if (audio.duration && !isNaN(audio.duration) && audio.duration > 0 && isFinite(audio.duration)) {
+                        setDetectedDuration(audio.duration);
+                    }
+                };
+
+                audio.onerror = () => {
+                    // Fallback Web Audio API AudioContext decode
+                    const reader = new FileReader();
+                    reader.onload = (evt) => {
+                        const arrayBuffer = evt.target?.result;
+                        if (!arrayBuffer) return;
+                        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                        if (!AudioCtx) return;
+                        const ctx = new AudioCtx();
+                        ctx.decodeAudioData(arrayBuffer, (decoded) => {
+                            if (decoded && decoded.duration) setDetectedDuration(decoded.duration);
+                            ctx.close();
+                        }, () => ctx.close());
+                    };
+                    reader.readAsArrayBuffer(file);
+                };
+
+                audio.src = objectUrl;
+            }
+
+            let selectedDurationSeconds = 0;
+
+            async function handleContinue() {
+                if (!selectedFile) return;
+                const continueBtn = document.getElementById('continueBtn');
+                if (!continueBtn) return;
+                
+                const originalText = continueBtn.innerHTML;
+
+                // Task 3: Verify authenticated user before upload
+                if (window.auth && typeof window.auth.getUser === 'function') {
+                    const user = await window.auth.getUser();
+                    if (!user) {
+                        renderCard(selectedFile, actualDuration, "Please log in to upload meeting audio.");
+                        setTimeout(() => {
+                            window.location.href = `login.html?redirect=${encodeURIComponent(window.location.pathname)}`;
+                        }, 1500);
+                        return;
+                    }
+                }
+
+                continueBtn.innerHTML = '<span class="animate-pulse">Uploading...</span>';
+                continueBtn.disabled = true;
+                
+                try {
+                    const formData = new FormData();
+                    formData.append('audio', selectedFile);
+                    formData.append('source', 'uploaded');
+                    if (selectedDurationSeconds > 0) {
+                        formData.append('duration_seconds', String(selectedDurationSeconds));
+                        formData.append('duration', String(selectedDurationSeconds));
+                    }
+                    
+                    const apiUrl = import.meta.env ? (import.meta.env.VITE_API_URL || 'http://localhost:3000') : 'http://localhost:3000';
+                    
+                    // Auth headers
+                    let authHeaders = {};
+                    if (window.auth && typeof window.auth.getAuthHeaders === 'function') {
+                        authHeaders = await window.auth.getAuthHeaders();
+                    }
+
+                    const response = await fetch(`${apiUrl}/api/meetings/upload`, {
+                        method: 'POST',
+                        headers: authHeaders,
+                        body: formData
+                    });
+                    
+                    if (!response.ok) {
+                        const errorData = await response.json().catch(() => ({}));
+                        throw new Error(errorData.error || `Upload failed (HTTP ${response.status})`);
+                    }
+                    
+                    const data = await response.json();
+                    const meetingId = data.meeting?.id || data.fileId;
+                    if (data.success && meetingId) {
+                        window.location.href = `processing.html?meetingId=${meetingId}`;
+                    } else {
+                        throw new Error('Invalid response from server');
+                    }
+                } catch (e) {
+                    console.error("Upload error:", e);
+                    if (continueBtn) {
+                        continueBtn.innerHTML = originalText;
+                        continueBtn.disabled = false;
+                    }
+                    renderCard(selectedFile, actualDuration, e.message || "Unable to upload this audio file.");
+                }
+            }
+
+            // Bind events
+            if (uploadBtn && fileInput) {
+                uploadBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (!selectedFile && resultBox && !resultBox.innerHTML.trim()) {
+                        renderCard(null, '—', null);
+                        resultBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                    fileInput.click();
+                });
+                fileInput.addEventListener('change', handleFileSelect);
+            }
+
+            return { getSelectedFile: () => selectedFile };
+        })();
+    </script>
+
+  <!-- ================================================================= -->
+  <!-- RECORD MEETING MODAL INTERFACE -->
+  <!-- ================================================================= -->
+  <div id="recordMeetingModal" class="fixed inset-0 bg-on-surface/60 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-surface-container-lowest border border-outline-variant rounded-2xl max-w-lg w-full p-6 md:p-8 shadow-2xl space-y-6 relative overflow-hidden">
+      <!-- Modal Header -->
+      <div class="flex justify-between items-center border-b border-outline-variant/60 pb-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+          </div>
+          <div>
+            <h3 class="font-display font-bold text-on-surface text-xl">Record Meeting</h3>
+            <p class="text-xs text-on-surface-variant">Live Audio Capture & AI Presentation Engine</p>
+          </div>
+        </div>
+        <button id="btnCloseRecordModal" class="text-on-surface-variant hover:text-on-surface p-1 rounded-lg cursor-pointer">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Status Indicator Pill -->
+      <div class="flex justify-center">
+        <div id="recordingStatusPill" class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-surface-container-low border border-outline-variant/60 text-xs font-medium">
+          <span class="w-2.5 h-2.5 rounded-full bg-primary/60"></span> Ready to record
+        </div>
+      </div>
+
+      <!-- Live Timer Display -->
+      <div class="text-center py-2">
+        <span id="recordingTimer" class="font-display text-4xl md:text-5xl font-bold tracking-tight text-on-surface font-mono">00:00:00</span>
+      </div>
+
+      <!-- Canvas Audio Waveform Visualizer -->
+      <div class="relative">
+        <canvas id="recordingWaveform" width="450" height="60" class="w-full h-16 bg-surface-container-low rounded-xl border border-outline-variant/60"></canvas>
+      </div>
+
+      <!-- Recorded Audio Preview Element (Native player) -->
+      <audio id="recordedAudioPreview" controls class="w-full hidden mt-2"></audio>
+
+      <!-- User-Friendly Error Message Banner -->
+      <div id="recordErrorBox" class="bg-error-container/60 backdrop-blur-sm rounded-xl border border-error/20 p-4 flex items-start gap-3 hidden">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-error mt-0.5 shrink-0"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
+        <p id="recordErrorMessage" class="text-xs font-medium text-on-error-container leading-relaxed">Unable to upload the recording. Please try again.</p>
+      </div>
+
+      <!-- Progress UI during Uploading & AI Generation -->
+      <div id="recordProcessingProgress" class="space-y-3 pt-2 hidden">
+        <div class="flex justify-between items-center text-xs font-semibold">
+          <span id="progressStageText" class="text-primary font-mono">Uploading recording...</span>
+          <span class="text-on-surface-variant font-mono">AI Pipeline Active</span>
+        </div>
+        <div class="w-full h-2.5 bg-surface-container-low rounded-full overflow-hidden border border-outline-variant/40">
+          <div id="progressBarFill" class="h-full bg-primary transition-all duration-300 rounded-full" style="width: 15%;"></div>
+        </div>
+      </div>
+
+      <!-- Action Buttons Footer -->
+      <div class="pt-2">
+        <!-- Ready State Buttons -->
+        <div id="readyStateButtons" class="flex flex-col sm:flex-row gap-3">
+          <button id="btnStartRecord" type="button" class="flex-1 bg-primary hover:bg-primary-container text-on-primary font-label-md px-6 py-3.5 rounded-xl font-medium shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+            Start Recording
+          </button>
+          <button id="btnCancelRecord" type="button" class="bg-surface-container-lowest border border-outline-variant text-on-surface font-label-md px-6 py-3.5 rounded-xl hover:bg-surface-container transition-all flex items-center justify-center gap-2 cursor-pointer">
+            Cancel
+          </button>
+        </div>
+
+        <!-- Recording Active State Buttons (Pause / Resume & Finish) -->
+        <div id="recordingActiveButtons" class="hidden flex flex-col sm:flex-row gap-3 w-full">
+          <button id="btnPauseRecord" type="button" class="flex-1 bg-surface-container-lowest border border-outline-variant text-on-surface font-label-md px-5 py-3.5 rounded-xl hover:bg-surface-container transition-all flex items-center justify-center gap-2 text-sm font-semibold cursor-pointer shadow-sm">
+            <span id="btnPauseIcon" class="text-sm font-bold">⏸</span> <span id="btnPauseText">Pause</span>
+          </button>
+          <button id="btnStopRecord" type="button" class="flex-1 bg-error hover:bg-error-container text-on-error font-label-md px-5 py-3.5 rounded-xl font-bold shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 text-sm cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4"><rect width="14" height="14" x="5" y="5" rx="2"/></svg> Finish Recording
+          </button>
+        </div>
+
+        <!-- Recording Completed State Buttons (Play, Record Again, Format Selector, Download, Upload) -->
+        <div id="stoppedStateButtons" class="hidden flex flex-col space-y-3 w-full">
+          <div class="flex items-center justify-between bg-surface-container-low px-4 py-2 rounded-xl border border-outline-variant/30 text-xs text-on-surface-variant font-medium">
+            <span class="flex items-center gap-1.5 font-semibold text-on-surface">
+              Download Format:
+            </span>
+            <div class="flex items-center gap-4">
+              <label class="flex items-center gap-1.5 cursor-pointer text-on-surface">
+                <input type="radio" name="downloadFormat" value="mp3" checked class="accent-primary cursor-pointer" />
+                <span>MP3 (.mp3)</span>
+              </label>
+              <label class="flex items-center gap-1.5 cursor-pointer text-on-surface">
+                <input type="radio" name="downloadFormat" value="wav" class="accent-primary cursor-pointer" />
+                <span>WAV (.wav)</span>
+              </label>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
+            <button id="btnPlayRecord" type="button" class="bg-surface-container-lowest border border-outline-variant text-on-surface font-label-md px-5 py-3 rounded-xl hover:bg-surface-container transition-all flex items-center justify-center gap-2 text-xs font-semibold cursor-pointer shadow-sm">
+              <span id="btnPlayIcon" class="text-sm text-primary font-bold">▶</span>
+              <span id="btnPlayText">Play Recording</span>
+            </button>
+            <button id="btnRecordAgain" type="button" class="bg-surface-container-lowest border border-outline-variant text-on-surface font-label-md px-5 py-3 rounded-xl hover:bg-surface-container transition-all flex items-center justify-center gap-2 text-xs font-semibold cursor-pointer shadow-sm">
+              <span class="text-sm text-on-surface-variant font-bold">↻</span> Record Again
+            </button>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
+            <button id="btnDownloadAudio" type="button" class="bg-surface-container-lowest border border-outline-variant hover:bg-surface-container text-on-surface font-label-md px-5 py-3.5 rounded-xl font-semibold shadow-sm transition-all flex items-center justify-center gap-2 text-xs cursor-pointer">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-on-surface-variant"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+              Download Audio
+            </button>
+            <button id="btnUploadAudio" type="button" class="bg-primary hover:bg-primary-container text-on-primary font-label-md px-5 py-3.5 rounded-xl font-semibold shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 text-xs cursor-pointer">
+              <span class="text-base font-bold">✨</span> Generate Presentation
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="./src/pages/home.ts"></script>
+</body></html>

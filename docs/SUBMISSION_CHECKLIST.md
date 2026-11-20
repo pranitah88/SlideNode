@@ -1,0 +1,28 @@
+# Hackathon Submission Checklist
+
+- [x] Frontend works
+- [x] Backend works
+- [x] Supabase connected
+- [x] Audio upload works
+- [x] Duration calculation works
+- [x] Dynamic pricing works
+- [x] HTTP 402 works
+- [x] x402 signing works
+- [x] Facilitator verification works
+- [x] Algorand Testnet settlement works
+- [x] Transaction ID returned
+- [x] Payment stored
+- [x] AI transcription works
+- [x] Slides generated
+- [x] Speakers generated
+- [x] Action items generated
+- [x] Insights page works
+- [x] No fake payment
+- [x] No fake transaction
+- [x] No secrets committed
+- [x] README complete
+- [x] Demo guide complete
+- [x] Architecture documented
+- [x] Database documented
+- [x] API documented
+- [x] Production build passes

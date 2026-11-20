@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>AI Processing - SlideNode AI</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-container-highest": "#e1e3e4",
+            "error-container": "#ffdad6",
+            "secondary-fixed": "#dae2fd",
+            "on-background": "#191c1d",
+            "tertiary-fixed": "#e1e0ff",
+            "tertiary-container": "#585be6",
+            "surface-tint": "#0053db",
+            "surface-container": "#edeeef",
+            "outline": "#737686",
+            "on-secondary": "#ffffff",
+            "on-tertiary-fixed-variant": "#2f2ebe",
+            "primary": "#004ac6",
+            "on-surface-variant": "#434655",
+            "secondary": "#565e74",
+            "tertiary-fixed-dim": "#c0c1ff",
+            "primary-container": "#2563eb",
+            "inverse-primary": "#b4c5ff",
+            "on-error": "#ffffff",
+            "on-secondary-fixed-variant": "#3f465c",
+            "surface-dim": "#d9dadb",
+            "surface-bright": "#f8f9fa",
+            "outline-variant": "#c3c6d7",
+            "on-error-container": "#93000a",
+            "on-primary-container": "#eeefff",
+            "on-primary-fixed-variant": "#003ea8",
+            "secondary-container": "#dae2fd",
+            "on-primary": "#ffffff",
+            "on-surface": "#191c1d",
+            "primary-fixed": "#dbe1ff",
+            "background": "#f8f9fa",
+            "on-primary-fixed": "#00174b",
+            "surface-container-low": "#f3f4f5",
+            "on-tertiary-fixed": "#07006c",
+            "surface-variant": "#e1e3e4",
+            "secondary-fixed-dim": "#bec6e0",
+            "tertiary": "#3e3fcc",
+            "inverse-surface": "#2e3132",
+            "on-tertiary": "#ffffff",
+            "primary-fixed-dim": "#b4c5ff",
+            "surface-container-lowest": "#ffffff",
+            "on-secondary-container": "#5c647a",
+            "inverse-on-surface": "#f0f1f2",
+            "on-secondary-fixed": "#131b2e",
+            "surface": "#f8f9fa",
+            "error": "#ba1a1a",
+            "on-tertiary-container": "#f1eeff",
+            "surface-container-high": "#e7e8e9",
+            "success": "#10b981",
+            "success-container": "#d1fae5",
+            "on-success-container": "#065f46"
+          },
+          fontFamily: {
+            sans: ["Inter", "sans-serif"],
+            display: ["Geist", "sans-serif"],
+            mono: ["JetBrains Mono", "monospace"]
+          },
+          spacing: {
+            "margin-mobile": "16px",
+            "container-max": "1280px",
+            "margin-desktop": "40px"
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; color: #191c1d; }
+    h1, h2, h3, h4, h5, h6, .font-display { font-family: 'Geist', sans-serif; }
+    .spin-blue {
+      animation: spin 2.5s linear infinite;
+    }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body class="bg-background min-h-screen flex flex-col font-sans text-on-surface">
+
+  <!-- Top NavBar (matches index.html, dashboard.html, receipt.html) -->
+  <header class="bg-surface-bright/80 backdrop-blur-md border-b border-outline-variant shadow-sm sticky top-0 z-50 w-full transition-all duration-300">
+    <div class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop h-16 max-w-container-max mx-auto">
+      <div class="flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary w-8 h-8"><path d="M2 10v3"></path><path d="M6 6v11"></path><path d="M10 3v18"></path><path d="M14 8v7"></path><path d="M18 5v13"></path><path d="M22 10v3"></path></svg>
+        <span class="font-display text-2xl font-bold text-primary">SlideNode</span>
+      </div>
+
+      <nav class="hidden md:flex gap-2 items-center">
+        <a class="px-4 py-2 text-on-surface-variant font-medium hover:bg-surface-container hover:text-on-surface rounded-full transition-colors duration-200" href="index.html">Home</a>
+        <a class="px-4 py-2 text-on-surface-variant font-medium hover:bg-surface-container hover:text-on-surface rounded-full transition-colors duration-200" href="dashboard.html">Dashboard</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <span class="bg-primary-fixed text-primary text-xs font-semibold px-3 py-1.5 rounded-full flex items-center gap-1.5" id="header-status-badge">
+          <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span> Processing Deck
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Page Header -->
+  <main class="flex-1 w-full max-w-4xl mx-auto px-margin-mobile md:px-margin-desktop py-8 space-y-8">
+    
+    <div class="text-center space-y-3">
+      <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary-fixed text-primary border border-primary/20 mb-1 shadow-sm">
+        <span class="material-symbols-outlined text-primary text-3xl spin-blue">generating_tokens</span>
+      </div>
+      <h1 class="font-display text-3xl font-bold tracking-tight text-on-surface">AI Presentation Pipeline</h1>
+      <p class="text-on-surface-variant text-sm max-w-lg mx-auto">
+        Executing multi-stage speech transcription, executive analysis, and slide deck generation.
+      </p>
+    </div>
+
+    <!-- Main Card Container (Light SaaS Container) -->
+    <div class="bg-surface-container-lowest border border-outline-variant rounded-2xl p-8 shadow-sm space-y-8">
+      
+      <!-- Meeting Information Table Card -->
+      <div class="grid grid-cols-1 md:grid-cols-5 gap-4 p-4 bg-surface-container-low rounded-xl border border-outline-variant/60">
+        <div>
+          <span class="text-xs uppercase tracking-wider text-on-surface-variant font-semibold">Meeting Name</span>
+          <p class="font-semibold text-on-surface text-sm truncate mt-0.5" id="proc-meeting-name">Loading...</p>
+        </div>
+        <div>
+          <span class="text-xs uppercase tracking-wider text-on-surface-variant font-semibold">Audio Format</span>
+          <p class="font-mono text-primary font-bold text-sm mt-0.5" id="proc-format">WAV</p>
+        </div>
+        <div>
+          <span class="text-xs uppercase tracking-wider text-on-surface-variant font-semibold">Audio Duration</span>
+          <p class="font-medium text-on-surface text-sm mt-0.5" id="proc-duration">--</p>
+        </div>
+        <div>
+          <span class="text-xs uppercase tracking-wider text-on-surface-variant font-semibold">Detected Language</span>
+          <p class="font-semibold text-primary text-xs mt-0.5 flex items-center gap-1" id="proc-language">
+            <span class="material-symbols-outlined text-sm">translate</span> Auto-Detecting...
+          </p>
+        </div>
+        <div>
+          <span class="text-xs uppercase tracking-wider text-on-surface-variant font-semibold">Engine</span>
+          <p class="font-mono text-primary font-semibold text-xs mt-0.5 flex items-center gap-1">
+            <span class="material-symbols-outlined text-sm">auto_awesome</span> Google Gemini AI
+          </p>
+        </div>
+      </div>
+
+      <!-- Modern SaaS Horizontal Progress Bar & Percentage Tracker -->
+      <div class="space-y-3">
+        <div class="flex justify-between items-center">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-primary animate-ping"></span>
+            <span class="font-semibold text-on-surface text-base" id="current-stage-title">Transcribing Audio...</span>
+          </div>
+          <span class="font-mono font-bold text-2xl text-primary" id="overall-percent">0%</span>
+        </div>
+        <div class="w-full bg-surface-container-highest h-3.5 rounded-full overflow-hidden p-0.5 border border-outline-variant">
+          <div class="bg-primary h-full rounded-full transition-all duration-500 shadow-sm" id="overall-bar" style="width: 0%"></div>
+        </div>
+      </div>
+
+      <!-- 8-Stage Real AI Checklist Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-outline-variant/60" id="stages-checklist">
+        
+        <!-- Stage 1 -->
+        <div class="flex items-center gap-3 p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/60" id="stage-card-1">
+          <div class="w-8 h-8 rounded-full bg-success text-white font-bold flex items-center justify-center shrink-0 shadow-sm" id="stage-icon-1">
+            <span class="material-symbols-outlined text-sm font-bold">check</span>
+          </div>
+          <div>
+            <p class="font-medium text-sm text-on-surface" id="stage-title-1">1. Upload Complete</p>
+            <p class="text-xs text-on-surface-variant">Audio file received securely</p>
+          </div>
+        </div>
+
+        <!-- Stage 2 -->
+        <div class="flex items-center gap-3 p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/60 opacity-60" id="stage-card-2">
+          <div class="w-8 h-8 rounded-full bg-surface-container-highest text-on-surface-variant flex items-center justify-center shrink-0" id="stage-icon-2">
+            <span class="material-symbols-outlined text-sm">hourglass_top</span>
+          </div>
+          <div>
+            <p class="font-medium text-sm text-on-surface-variant" id="stage-title-2">2. Audio Analysis</p>
+            <p class="text-xs text-on-surface-variant">Pre-processing speech & frequency detection</p>
+          </div>
+        </div>
+
+        <!-- Stage 3 -->
+        <div class="flex items-center gap-3 p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/60 opacity-60" id="stage-card-3">
+          <div class="w-8 h-8 rounded-full bg-surface-container-highest text-on-surface-variant flex items-center justify-center shrink-0" id="stage-icon-3">
+            <span class="material-symbols-outlined text-sm">hourglass_top</span>
+          </div>
+          <div>
+            <p class="font-medium text-sm text-on-surface-variant" id="stage-title-3">3. AI Transcription</p>
+            <p class="text-xs text-on-surface-variant">Speech-to-text transcript generated</p>
+          </div>
+        </div>
+
+        <!-- Stage 4 -->
+        <div class="flex items-center gap-3 p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/60 opacity-60" id="stage-card-4">
+          <div class="w-8 h-8 rounded-full bg-surface-container-highest text-on-surface-variant flex items-center justify-center shrink-0" id="stage-icon-4">
+            <span class="material-symbols-outlined text-sm">hourglass_top</span>
+          </div>
+          <div>
+            <p class="font-medium text-sm text-on-surface-variant" id="stage-title-4">4. Meeting Analysis</p>
+            <p class="text-xs text-on-surface-variant">Speaker & executive insights extracted</p>
+          </div>
+        </div>
+
+        <!-- Stage 5 -->
+        <div class="flex items-center gap-3 p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/60 opacity-60" id="stage-card-5">
+          <div class="w-8 h-8 rounded-full bg-surface-container-highest text-on-surface-variant flex items-center justify-center shrink-0" id="stage-icon-5">
+            <span class="material-symbols-outlined text-sm">hourglass_top</span>
+          </div>
+          <div>
+            <p class="font-medium text-sm text-on-surface-variant" id="stage-title-5">5. Extracting Action Items</p>
+            <p class="text-xs text-on-surface-variant">Assigned tasks and priority breakdown</p>
+          </div>
+        </div>
+
+        <!-- Stage 6 -->
+        <div class="flex items-center gap-3 p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/60 opacity-60" id="stage-card-6">
+          <div class="w-8 h-8 rounded-full bg-surface-container-highest text-on-surface-variant flex items-center justify-center shrink-0" id="stage-icon-6">
+            <span class="material-symbols-outlined text-sm">hourglass_top</span>
+          </div>
+          <div>
+            <p class="font-medium text-sm text-on-surface-variant" id="stage-title-6">6. Creating Slide Structure</p>
+            <p class="text-xs text-on-surface-variant">Dynamic multi-slide outline</p>
+          </div>
+        </div>
+
+        <!-- Stage 7 -->
+        <div class="flex items-center gap-3 p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/60 opacity-60" id="stage-card-7">
+          <div class="w-8 h-8 rounded-full bg-surface-container-highest text-on-surface-variant flex items-center justify-center shrink-0" id="stage-icon-7">
+            <span class="material-symbols-outlined text-sm">hourglass_top</span>
+          </div>
+          <div>
+            <p class="font-medium text-sm text-on-surface-variant" id="stage-title-7">7. Generating Presentation</p>
+            <p class="text-xs text-on-surface-variant">Creating PowerPoint (.pptx) deck</p>
+          </div>
+        </div>
+
+        <!-- Stage 8 -->
+        <div class="flex items-center gap-3 p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/60 opacity-60" id="stage-card-8">
+          <div class="w-8 h-8 rounded-full bg-surface-container-highest text-on-surface-variant flex items-center justify-center shrink-0" id="stage-icon-8">
+            <span class="material-symbols-outlined text-sm">hourglass_top</span>
+          </div>
+          <div>
+            <p class="font-medium text-sm text-on-surface-variant" id="stage-title-8">8. Rendering Preview</p>
+            <p class="text-xs text-on-surface-variant">Rendering visual slide previews & downloads</p>
+          </div>
+        </div>
+
+      </div>
+
+
+
+    </div>
+
+  </main>
+
+  <footer class="text-center text-xs text-on-surface-variant py-6">
+    SlideNode AI • Voice to Presentation Engine
+  </footer>
+
+  <script type="module">
+    import { api } from './src/services/api.ts';
+    import { auth } from './src/services/auth.ts';
+    import { initNavbarControls } from './src/services/navbar.ts';
+
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      const user = await auth.initAuthGuard(true);
+      if (!user) return;
+      await initNavbarControls();
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const meetingId = urlParams.get('meetingId');
+
+      if (!meetingId) {
+        window.location.href = 'index.html';
+        return;
+      }
+
+      // Clear any stale loop-guard from a previous session for this meeting
+      sessionStorage.removeItem(`ppt_ready_${meetingId}`);
+      console.log('[Processing] Processing started for meeting:', meetingId);
+
+      const terminalFeed = document.getElementById('terminal-feed');
+      const addLog = (msg) => {
+        if (!terminalFeed) return;
+        const time = new Date().toLocaleTimeString();
+        const div = document.createElement('div');
+        div.innerHTML = `<span class="text-outline">[${time}]</span> ${msg}`;
+        terminalFeed.appendChild(div);
+        terminalFeed.scrollTop = terminalFeed.scrollHeight;
+      };
+
+      // Load initial meeting info
+      try {
+        const data = await api.getMeeting(meetingId);
+        const meeting = data.meeting;
+        document.getElementById('proc-meeting-name').textContent = meeting.meeting_name || 'Meeting Recording';
+        document.getElementById('proc-format').textContent = (meeting.file_name || '').split('.').pop().toUpperCase() || 'WAV';
+        document.getElementById('proc-duration').textContent = Math.ceil((meeting.audio_duration_seconds || 0) / 60) + ' min';
+        const langEl = document.getElementById('proc-language');
+        if (langEl) {
+          const detected = meeting.detected_language || 'Auto Detecting';
+          langEl.innerHTML = `<span class="material-symbols-outlined text-sm">translate</span> ${detected}`;
+        }
+        addLog(`Loaded meeting details for ${meeting.meeting_name}`);
+      } catch (err) {
+        console.error('Failed to load initial meeting data', err);
+      }
+
+      const updateStageUI = (stage, percent, presentation) => {
+        document.getElementById('overall-percent').textContent = percent + '%';
+        document.getElementById('overall-bar').style.width = percent + '%';
+
+        const stageTitles = {
+          'uploaded': 'Audio Uploaded',
+          'payment_verified': 'Audio Analysis...',
+          'transcribing': 'Transcribing Audio...',
+          'summary': 'Generating Executive Summary...',
+          'action_items': 'Extracting Action Items...',
+          'speakers': 'Identifying Speakers...',
+          'slide_outline': 'Designing Slide Outline...',
+          'slide_content': 'Writing Slide Content...',
+          'pptx_building': 'Building PowerPoint (.pptx) File...',
+          'preview_generating': 'Rendering Slide Image Previews...',
+          'completed': 'Presentation Fully Completed!'
+        };
+
+        const titleText = stageTitles[stage] || 'Processing Presentation...';
+        document.getElementById('current-stage-title').textContent = titleText;
+
+        const stageIndexMap = {
+          'uploaded': 1,
+          'payment_verified': 2,
+          'transcribing': 3,
+          'summary': 4,
+          'action_items': 5,
+          'speakers': 5,
+          'slide_outline': 6,
+          'slide_content': 6,
+          'pptx_building': 7,
+          'preview_generating': 8,
+          'completed': 8
+        };
+
+        const activeIdx = stageIndexMap[stage] || 1;
+
+        for (let i = 1; i <= 8; i++) {
+          const card = document.getElementById(`stage-card-${i}`);
+          const icon = document.getElementById(`stage-icon-${i}`);
+          const title = document.getElementById(`stage-title-${i}`);
+
+          if (!card || !icon) continue;
+
+          if (i < activeIdx || stage === 'completed') {
+            // Completed stage (Light SaaS Green)
+            card.className = "flex items-center gap-3 p-3.5 rounded-xl bg-success-container/40 border border-success/30 transition-all";
+            icon.className = "w-8 h-8 rounded-full bg-success text-white font-bold flex items-center justify-center shrink-0 shadow-sm";
+            icon.innerHTML = '<span class="material-symbols-outlined text-sm font-bold">check</span>';
+            if (title) title.className = "font-medium text-sm text-on-surface";
+          } else if (i === activeIdx) {
+            // Active stage (Light SaaS Blue Highlight)
+            card.className = "flex items-center gap-3 p-3.5 rounded-xl bg-primary-fixed border border-primary/40 shadow-sm transition-all animate-pulse";
+            icon.className = "w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center shrink-0 shadow-sm";
+            icon.innerHTML = '<span class="material-symbols-outlined text-sm animate-spin">sync</span>';
+            if (title) title.className = "font-semibold text-sm text-primary";
+          } else {
+            // Pending stage (Light SaaS Gray)
+            card.className = "flex items-center gap-3 p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/60 opacity-60 transition-all";
+            icon.className = "w-8 h-8 rounded-full bg-surface-container-highest text-on-surface-variant flex items-center justify-center shrink-0";
+            icon.innerHTML = '<span class="material-symbols-outlined text-sm">hourglass_top</span>';
+            if (title) title.className = "font-medium text-sm text-on-surface-variant";
+          }
+        }
+      };
+
+      // State & Pipeline Management
+      let isNavigating = false;
+      let hasTriggeredPipeline = false;
+
+      // ===================================================================
+      // FAST-FORWARD: If PPT already complete when this page loads,
+      // skip the processing screen entirely and go straight to dashboard.
+      // This fixes: receipt → "Go To PowerPoint" → loop when PPT exists.
+      // ===================================================================
+      console.log('[Processing] Checking if PPT already generated...');
+      try {
+        const checkRes = await fetch(`${API_URL}/api/presentation/${meetingId}`);
+        if (checkRes.ok) {
+          const checkData = await checkRes.json();
+          const cp = checkData.presentation;
+          const alreadyDone = cp && cp.status === 'completed' && Boolean(
+            (cp.slides_json && cp.slides_json.length > 0) || (cp.slides && cp.slides.length > 0)
+          );
+          if (alreadyDone) {
+            console.log('[Processing] PPT already generated. Fast-forwarding to dashboard. Slides:', (cp.slides_json || cp.slides || []).length);
+            addLog('<span class="text-success font-bold">✓ Presentation already generated! Opening presentation window...</span>');
+            sessionStorage.setItem(`ppt_ready_${meetingId}`, 'true');
+            setTimeout(() => {
+              window.location.href = `dashboard.html?meetingId=${meetingId}`;
+            }, 400);
+            return;
+          } else {
+            console.log('[Processing] PPT not yet generated. Status:', cp?.status, '| Starting pipeline...');
+          }
+        }
+      } catch (e) {
+        console.warn('[Processing] Fast-forward check failed (non-critical):', e.message);
+      }
+
+      const triggerGeneration = async () => {
+        if (hasTriggeredPipeline) return;
+        hasTriggeredPipeline = true;
+        addLog('<span class="text-primary font-bold">🚀 Starting AI Presentation Pipeline...</span>');
+        try {
+          const processUrl = api.getProcessUrl(meetingId);
+          const res = await fetch(processUrl, { method: 'POST' });
+          if (!res.ok && res.status !== 200) {
+            const errData = await res.json().catch(() => ({}));
+            addLog(`<span class="text-error">Pipeline error: ${errData.error || res.statusText}</span>`);
+          } else {
+            addLog('<span class="text-primary">✓ Pipeline triggered successfully</span>');
+          }
+        } catch (err) {
+          console.error("Pipeline invocation error:", err);
+          addLog(`<span class="text-error">Pipeline error: ${err.message || 'Connection failed'}</span>`);
+          hasTriggeredPipeline = false;
+        }
+      };
+
+      const renderFailureUI = (errorMsg, failureStage) => {
+        const stageLabel = failureStage ? `[${failureStage}] ` : '';
+        addLog(`<span class="text-error font-bold">❌ ${stageLabel}${errorMsg}</span>`);
+        const titleEl = document.getElementById('current-stage-title');
+        if (titleEl) {
+          titleEl.textContent = `Generation failed: ${stageLabel || ''}${errorMsg.substring(0, 60)}`;
+          titleEl.className = "font-semibold text-error text-base";
+        }
+
+        let errorCard = document.getElementById('pipeline-error-card');
+        if (!errorCard) {
+          errorCard = document.createElement('div');
+          errorCard.id = 'pipeline-error-card';
+          errorCard.className = "p-4 rounded-xl bg-error-container/40 border border-error/30 mt-4";
+          if (titleEl && titleEl.parentElement) {
+            titleEl.parentElement.appendChild(errorCard);
+          }
+        }
+        
+        // Configuration errors need special messaging
+        const isConfigError = failureStage === 'CONFIGURATION' || errorMsg.includes('API key');
+        const actionHtml = isConfigError
+          ? `<p class="text-xs text-error-container mt-2 font-mono bg-error/10 px-2 py-1 rounded">Please verify your Gemini API key in backend/.env and restart the server.</p>`
+          : `<button id="retryPipelineBtn" class="mt-3 bg-primary text-on-primary px-4 py-2 rounded-xl text-xs font-semibold hover:bg-primary/90 transition-all cursor-pointer">Try Again</button>`;
+        
+        errorCard.innerHTML = `
+          <div>
+            <p class="font-bold text-on-surface text-sm">Presentation generation failed${failureStage ? ` — Stage: ${failureStage}` : ''}</p>
+            <p class="text-xs text-on-surface-variant mt-1">${errorMsg}</p>
+            ${actionHtml}
+          </div>
+        `;
+        if (!isConfigError) {
+          const retryBtn = document.getElementById('retryPipelineBtn');
+          if (retryBtn) {
+            retryBtn.onclick = () => {
+              errorCard.remove();
+              hasTriggeredPipeline = false;
+              triggerGeneration();
+            };
+          }
+        }
+      };
+
+      // Strict Dashboard Gatekeeping Rule Polling
+      const pollInterval = setInterval(async () => {
+        if (isNavigating) return;
+
+        try {
+          const res = await fetch(`${API_URL}/api/presentation/${meetingId}`);
+          if (!res.ok) {
+            if (res.status === 404) {
+              clearInterval(pollInterval);
+              renderFailureUI("Meeting or presentation not found.");
+            }
+            return;
+          }
+
+          const data = await res.json();
+          if (!data.success || !data.presentation) return;
+
+          const p = data.presentation;
+          const stage = p.current_stage || p.status;
+          const percent = p.progress_percent || (p.status === 'completed' ? 100 : 15);
+
+          if (p.status === 'uploaded' || p.status === 'payment_verified') {
+            // Trigger AI presentation generation pipeline
+            triggerGeneration();
+          }
+
+          if (p.status === 'failed' || (p.error && p.status !== 'completed')) {
+            clearInterval(pollInterval);
+            renderFailureUI(p.error || "Unable to generate presentation from audio.", p.failure_stage);
+            return;
+          }
+
+          updateStageUI(stage, percent, p);
+
+          const hasTranscript = Boolean(p.transcript && p.transcript.length > 0);
+          const hasSlides = Boolean(p.slides_json && p.slides_json.length > 0);
+          // pptx_url may be a local path during dev — only require slides to navigate
+          const hasPptx = Boolean(p.pptx_url && p.pptx_url.length > 0);
+          const hasPreviews = Boolean(p.preview_urls && p.preview_urls.length > 0);
+          const isCompleted = p.status === 'completed';
+
+          if (isCompleted && hasSlides) {
+            isNavigating = true;
+            clearInterval(pollInterval);
+            console.log('[Processing] PPT generated. Navigating to presentation.');
+            console.log('[Processing] Slides rendered:', (p.slides_json || []).length);
+            addLog('<span class="text-success font-bold">✓ All 8 steps verified ready! Opening presentation window...</span>');
+
+            const headerBadge = document.getElementById('header-status-badge');
+            if (headerBadge) {
+              headerBadge.className = "bg-success-container text-on-success-container text-xs font-semibold px-3 py-1.5 rounded-full flex items-center gap-1.5";
+              headerBadge.innerHTML = '<span class="w-2 h-2 rounded-full bg-success"></span> Completed';
+            }
+
+            // Set the loop-guard BEFORE navigating so dashboard never bounces back
+            sessionStorage.setItem(`ppt_ready_${meetingId}`, 'true');
+            console.log('[Processing] Redirecting to dashboard. Source: processing complete');
+
+            setTimeout(() => {
+              window.location.href = `dashboard.html?meetingId=${meetingId}`;
+            }, 600);
+          }
+
+        } catch (err) {
+          console.error("Polling status error:", err);
+        }
+      }, 1000);
+
+    });
+  </script>
+</body>
+</html>

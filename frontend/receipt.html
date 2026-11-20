@@ -1,0 +1,208 @@
+<!DOCTYPE html><html class="light" lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Payment Receipt - Voice to Slide Deck Node</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-on-surface": "#f0f1f2",
+                        "error": "#ba1a1a",
+                        "primary": "#004ac6",
+                        "outline-variant": "#c3c6d7",
+                        "on-background": "#191c1d",
+                        "error-container": "#ffdad6",
+                        "on-surface": "#191c1d",
+                        "surface": "#f8f9fa",
+                        "surface-container-highest": "#e1e3e4",
+                        "surface-container-low": "#f3f4f5",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "on-tertiary-fixed-variant": "#2f2ebe",
+                        "on-tertiary": "#ffffff",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "secondary": "#565e74",
+                        "tertiary-container": "#585be6",
+                        "on-primary-container": "#eeefff",
+                        "on-secondary-container": "#5c647a",
+                        "on-error-container": "#93000a",
+                        "on-primary-fixed": "#00174b",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "on-error": "#ffffff",
+                        "outline": "#737686",
+                        "surface-tint": "#0053db",
+                        "secondary-fixed": "#dae2fd",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-variant": "#e1e3e4",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "background": "#f8f9fa",
+                        "primary-container": "#2563eb",
+                        "surface-bright": "#f8f9fa",
+                        "on-surface-variant": "#434655",
+                        "surface-container": "#edeeef",
+                        "inverse-surface": "#2e3132",
+                        "tertiary": "#3e3fcc",
+                        "primary-fixed": "#dbe1ff",
+                        "tertiary-fixed": "#e1e0ff",
+                        "surface-dim": "#d9dadb",
+                        "on-tertiary-container": "#f1eeff",
+                        "surface-container-high": "#e7e8e9",
+                        "on-tertiary-fixed": "#07006c",
+                        "on-primary": "#ffffff",
+                        "on-secondary-fixed": "#131b2e",
+                        "tertiary-fixed-dim": "#c0c1ff",
+                        "secondary-container": "#dae2fd",
+                        "inverse-primary": "#b4c5ff",
+                        "on-secondary": "#ffffff",
+                        "success": "#10b981",
+                        "on-success": "#ffffff",
+                        "success-container": "#d1fae5",
+                        "on-success-container": "#065f46"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "margin-desktop": "40px",
+                        "stack-sm": "12px",
+                        "margin-mobile": "16px",
+                        "stack-md": "24px",
+                        "stack-lg": "48px",
+                        "base": "8px",
+                        "container-max": "1280px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Geist"],
+                        "headline-lg": ["Geist"],
+                        "headline-md": ["Geist"],
+                        "body-md": ["Inter"],
+                        "label-sm": ["Geist"],
+                        "headline-lg-mobile": ["Geist"],
+                        "display": ["Geist"],
+                        "body-lg": ["Inter"],
+                        "mono": ["JetBrains Mono"]
+                    },
+                    "fontSize": {
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "display": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "mono": ["14px", { "lineHeight": "20px", "fontWeight": "400" }]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .fade-in {
+            animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        @keyframes fadeIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .delay-100 { animation-delay: 100ms; }
+        .delay-200 { animation-delay: 200ms; }
+        .delay-300 { animation-delay: 300ms; }
+        .delay-400 { animation-delay: 400ms; }
+        
+        .scale-in {
+            animation: scaleIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            opacity: 0;
+            transform: scale(0.8);
+        }
+        @keyframes scaleIn {
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .pulse-glow {
+            animation: pulseGlow 2s infinite;
+        }
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        .timeline-fill {
+            position: relative;
+        }
+        .timeline-fill::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            height: 2px;
+            width: 0;
+            background-color: #10b981;
+            transform: translateY(-50%);
+            animation: fillTimeline 1.5s ease-out 0.5s forwards;
+            z-index: 0;
+        }
+        @keyframes fillTimeline {
+            to { width: 100%; }
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased min-h-screen flex flex-col">
+<!-- Top Navigation Header -->
+<header class="bg-surface border-b border-outline-variant px-6 h-16 flex justify-between items-center z-50">
+  <div class="flex items-center gap-6">
+    <div class="flex items-center gap-2">
+      <div class="w-8 h-8 rounded-xl bg-primary/20 border border-primary/40 flex items-center justify-center">
+        <span class="material-symbols-outlined text-primary text-lg">slideshow</span>
+      </div>
+      <span class="font-display font-bold text-lg text-primary">SlideNode AI</span>
+    </div>
+    <nav class="hidden md:flex gap-1 items-center">
+      <a class="px-3.5 py-1.5 text-on-surface-variant hover:text-primary hover:bg-surface-container rounded-full text-sm font-medium transition-colors" href="index.html">Home</a>
+      <a class="px-3.5 py-1.5 text-on-surface-variant hover:text-primary hover:bg-surface-container rounded-full text-sm font-medium transition-colors" href="dashboard.html">Dashboard</a>
+      <a class="px-3.5 py-1.5 text-primary font-semibold bg-primary/15 border border-primary/30 rounded-full text-sm transition-colors" href="receipt.html">Payments</a>
+    </nav>
+  </div>
+  <div class="flex items-center gap-4" id="global-navbar-controls">
+    <!-- Injected dynamically by navbar service -->
+  </div>
+</header>
+<main class="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-8">
+  <!-- Header Section -->
+  <div class="text-center max-w-2xl mx-auto mb-8 fade-in">
+    <h1 class="text-headline-lg font-bold text-on-surface mb-2">Payment Receipts</h1>
+    <p class="text-body-md text-on-surface-variant">Verified x402 Micropayment Records & Cryptographic Settlement Receipts</p>
+  </div>
+
+  <!-- Dynamic Receipts Container -->
+  <div id="receipts-container" class="w-full">
+    <div class="flex justify-center py-12">
+      <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-primary"></div>
+    </div>
+  </div>
+</main>
+
+<footer class="w-full py-stack-md px-margin-desktop flex flex-col items-center border-t border-outline-variant bg-surface-container-low text-on-surface-variant mt-auto">
+  <div class="flex gap-4 mb-4 opacity-60">
+    <span class="flex items-center gap-1 text-label-sm font-label-sm"><span class="material-symbols-outlined text-[16px]" data-icon="lock">lock</span> Secure Payment</span>
+    <span class="flex items-center gap-1 text-label-sm font-label-sm"><span class="material-symbols-outlined text-[16px]" data-icon="bolt">bolt</span> Instant Settlement</span>
+    <span class="flex items-center gap-1 text-label-sm font-label-sm"><span class="material-symbols-outlined text-[16px]" data-icon="verified_user">verified_user</span> x402 Verified</span>
+  </div>
+  <p class="text-label-sm font-label-sm">© 2026 SlideNode AI. All rights reserved.</p>
+</footer>
+
+<script type="module" src="./src/pages/receipt.ts"></script>
+</body></html>
