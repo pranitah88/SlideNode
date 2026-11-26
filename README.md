@@ -3,7 +3,6 @@
 SlideNode is an AI-powered meeting intelligence and presentation generation platform. It transforms raw meeting audio into structured, executive-ready PowerPoint presentation decks and actionable insights using Google Gemini AI.
 
 ---
-
 ## Overview
 
 Meetings are full of valuable discussions, but converting lengthy conversations into clear, professional presentation slides takes hours of manual effort. SlideNode automates this process end-to-end:
@@ -22,7 +21,6 @@ Meetings are full of valuable discussions, but converting lengthy conversations 
 ---
 
 ## System Architecture
-
 ```
 User (Browser)
  │
